@@ -247,7 +247,7 @@ blockquote {
 
 ## Program
 
-- Motivation
+- Problem statement
 - The high cost of lexing
 - The high cost of analyzing
 - The high cost of parsing
@@ -256,7 +256,7 @@ blockquote {
 
 ---
 
-# I. Motivation
+# I. Problem statement
 
 ---
 
@@ -266,15 +266,17 @@ blockquote {
 
 ---
 
-## Parsing is a bottleneck on desktop
+## Parsing + compiling is a bottleneck
 
-![JavaScript parsing is a bottleneck](img/parsing times.png)
+![JavaScript parsing + compiling is a bottleneck](img/parsing times.png)
+
+.small[On average, parsing + compiling == 4.4s]
 
 .small[Source: [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201), Google]
 
 ---
 
-## ...and worse on mobile
+## ...especially on mobile
 
 Parsing 1Mb of JavaScript:
 
@@ -285,7 +287,22 @@ Parsing 1Mb of JavaScript:
 
 ---
 
-.center[## Why?]
+## Recommendations around the web
+
+- "[Measure](https://philipwalton.com/articles/why-web-developers-need-to-care-about-interactivity/)"
+- "[Make your JS smaller](https://infrequently.org/2017/10/can-you-afford-it-real-world-web-performance-budgets/)"
+- "[Use server push](https://www.youtube.com/watch?v=RWLzUnESylc)"
+- "Make your JS lazy"
+- "Minimize your JS"
+- ...
+
+--
+
+Yes, but...
+
+---
+
+.center[## Why is it a bottlneck?]
 
 ---
 
@@ -317,6 +334,18 @@ Can we get close to this without changing the semantics of JavaScript?
 
 ---
 
+## Requirements
+
+- Not a new programming language.
+- Not a subset or a superset of JavaScript.
+- Not a bytecode.
+- Do not change the semantics of existing programs.
+- Do not change the semantics of well-behaved programs.
+- As transparent as possible.
+- Compatible with future versions of JavaScript.
+
+---
+
 # II. The high cost of lexing
 
 ---
@@ -338,9 +367,9 @@ Could we speed parsing by using a better lexer?
 
 Protocol:
 
-1. Evaluate time spent verifying during text parse.
-2. Extract (unsafe) binary format from SpiderMonkey AST.
-3. Replace text parsing with binary parsing.
+1. Extract (unsafe) binary format from SpiderMonkey AST.
+2. Replace text parsing with binary parsing.
+3. Benchmark time spent verifying during text parse.
 4. Compare speed (Facebook Chat, Firefox Devtools).
 
 ---
@@ -349,8 +378,8 @@ Protocol:
 
 > Could we speed parsing by using a better lexer?
 
-- Original verification time: 𝜖
 - Parse duration change: * ~0.3
+- Original verification time: 𝜖
 
 ⇒ Experiment conclusive. Let's go Binary AST.
 
@@ -358,11 +387,8 @@ Protocol:
 
 ## Experiment 1.2
 
-Can we:
-
-- design a binary source format to transport ASTs;
-- keep semantics and syntax guarantees for well-behaved programs;
-- make it future-compatible?
+Can we design a binary source format to transport ASTs,
+within our requirements?
 
 ---
 
@@ -454,15 +480,11 @@ EagerFunctionDeclaration:
 
 ## Experiment 1.2 - Conclusion
 
-> Can we:
->
-> - design a binary source format to transport ASTs;
-> - keep semantics and syntax guarantees for well-behaved programs;
-> - make it future-compatible?
-
---
+> Can we design a binary source format to transport ASTs, within our requirements?
 
 Experiment successful: yes, we can.
+
+--
 
 Limitation: no real-world benchmarks yet.
 
@@ -558,14 +580,23 @@ or a block, it needs critical information:
 
 ## Experiment 2.2
 
-Could we design a format:
-
-- that stores all the critical information *before* it
-would required by a streaming bytecode compiler;
-- without compromising the interesting properties we have achieved;
-- without changing the semantics of existing programs?
+Could we amend our Binary AST to enable streaming
+bytecode compilation, within our requirements?
 
 ---
+
+## Strategy
+
+1. Consider the text parser as a mechanic for building (informal) proofs
+of presence/absence of direct `eval`, etc.
+2. Reverse proof obligations into Proof-Carrying Code.
+
+--
+
+Yes, you have heard the word "Proof-Carrying Code" in JavaScript.
+
+---
+
 
 ## AST Specifications (1)
 
@@ -573,8 +604,12 @@ would required by a streaming bytecode compiler;
 interface EagerFunctionDeclaration {
   attribute boolean isAsync;
   attribute boolean isGenerator;
-  attribute AssertedParameterScope? parameterScope; // ☜
-  attribute AssertedVarScope? bodyScope;            // ☜
+
+  // (Informal) proof (function parameters)
+  attribute AssertedParameterScope? parameterScope;
+  // (Informal) proof (function body)
+  attribute AssertedVarScope? bodyScope;
+
   attribute BindingIdentifier name;
   attribute FormalParameters params;
   attribute FunctionBody body;
@@ -602,33 +637,21 @@ interface AssertedParameterScope {
 
 ## Language specifications
 
-During compilation, throw a `SyntaxError` if `parameterNames`,
-`capturedNames` or `hasDirectEval` was proven false.
+During compilation, if `parameterNames`, `capturedNames`
+or `hasDirectEval` was proven false, throw `SyntaxError`.
+
+--
+
+Or "If the proof is false, reject it."
 
 ---
 
 ## Experiment 2.2 - Status
 
-> Could we design a format:
->
-> - that stores all the critical information *before* it would required by a streaming bytecode compiler;
-> - without compromising the interesting properties we have achieved;
-> - without changing the semantics of existing programs?
+> Could we amend our Binary AST to enable streaming bytecode compilation, within our requirements?
 
-⇒ Most likely. Actual verification in progress.
-
----
-
-## Interlude - Relationship with PCC
-
-We have changed information-building obligation:
-
-- the encoder builds the information;
-- the binary parser just needs to check it.
-
---
-
-This is the same conceptual change as Proving Code ⇒ Proof Carrying Code.
+- ⇒ Intuitively, yes.
+- WIP: Build the streaming compiler to confirm.
 
 ---
 
@@ -649,7 +672,7 @@ This is the same conceptual change as Proving Code ⇒ Proof Carrying Code.
 
 ## The high cost of parsing
 
-Recent JS VMs implement a lazy strategy ("Syntax Parsing"):
+Recent JS VMs implement a semi-lazy strategy ("Syntax Parsing"):
 - parse and verify the entire file;
 - only build AST for toplevel and toplevel functions;
 - re-parse and re-verify nested functions as needed.
@@ -666,7 +689,8 @@ Would lazier parsing make things faster?
 
 1. Evaluate first-parse time saved by Syntax Parsing.
 2. Tweak unsafe binary parser to skip nested/all functions.
-3. Compare speed (Facebook Chat, Firefox Devtools).
+3. Evaluate time spent storing lazy thunks.
+4. Compare speed (Facebook Chat, Firefox Devtools).
 
 ---
 
@@ -674,10 +698,11 @@ Would lazier parsing make things faster?
 
 First-parse time effect:
 
-- Syntax Parsing vs Full Parsing: * 0.8;
-- Syntax Binary Parsing vs Binary Parsing: * 0.8;
-- Binary Parsing (skip nested) vs Binary Parsing: * 0.45;
-- Binary Parsing (skip functions) vs Binary Parsing: * 0.25
+- Full Parsing ⇒ Syntax Parsing: * 0.8;
+- Binary Parsing ⇒ Syntax Binary Parsing: * 0.8;
+- Binary Parsing ⇒ Binary Parsing (skip nested): * 0.45;
+- Binary Parsing ⇒ Binary Parsing (skip functions): * 0.25;
+- Time spent storing lazy thunks: 𝜀.
 
 --
 
@@ -703,12 +728,8 @@ Can we perform lazy parsing on text source?
 
 ## Experiment 3.3
 
-Can we alter our binary source format:
-
-- to allow lazy parsing source files;
-- without losing the properties established before;
-- without changing the semantics for any existing program;
-- without changing the semantics for any well-behaved program?
+Can we alter our binary source format to allow lazy parsing source files,
+within our constraints?
 
 ---
 
@@ -728,8 +749,7 @@ typedef (EagerFunctionDeclaration
 
 ## Language specification
 
-New exception: `DelayedSyntaxError`. May be thrown while *executing*
-a `[Skippable]` node.
+New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skippable]` node.
 
 --
 
@@ -764,12 +784,7 @@ a `[Skippable]` node.
 
 ## Experiment 3.3 - Result
 
-> Can we alter our binary source format:
->
-> - to allow lazy parsing source files;
-> - without losing the properties established before;
-> - without changing the semantics for any existing program;
-> - without changing the semantics for any well-behaved program?
+> Can we alter our binary source format to allow lazy parsing source files, within our constraints?
 
 --
 
@@ -789,15 +804,15 @@ Experiment successful: yes, we can.
 ---
 
 # V. The high cost of fetching
-.center[## (Future work)]
+## (Future work)
 
 ---
 
 ## Experiment 4.1
 
-Streaming *interpreters* can amortize the cost of fetching + decompressing **+ compiling** to *O(1 + 𝜀)*.
+Streaming **interpreters** can amortize the cost of fetching + decompressing **+ compiling** to *O(1 + 𝜀)*.
 
-Can we do it with JavaScript source?
+Can we do it with JavaScript text source?
 
 --
 
@@ -807,9 +822,9 @@ Clearly, no.
 
 ## Experiment 4.2 (WIP)
 
-Streaming *interpreters* can amortize the cost of fetching + decompressing **+ compiling** to *O(1 + 𝜀)*.
+Streaming **interpreters** can amortize the cost of fetching + decompressing **+ compiling** to *O(1 + 𝜀)*.
 
-Can we modify our AST to make it possible?
+Can we modify our Binary AST to make it possible?
 
 ---
 
@@ -839,14 +854,14 @@ Can we modify our AST to make it possible?
 
 ## Experiment 4.2 - Status
 
-> Streaming *interpreters* can amortize the cost of fetching + decompressing **+ compiling** to *O(1 + 𝜀)*.
+> Streaming **interpreters** can amortize the cost of fetching + decompressing **+ compiling** to *O(1 + 𝜀)*.
 >
-> Can we modify our AST to make it possible?
+> Can we modify our Binary AST to make it possible?
 
 - We have not affected the semantics of the language.
 - We should be able to parse only the toplevel and then start execution.
 
-⇒ Too early to conclude, but it might be possible.
+⇒ Too early to conclude, but encouraging.
 
 ---
 
@@ -870,8 +885,16 @@ Can we modify our AST to make it possible?
 ## What we have
 
 - Clear roadmap towards from bottleneck to (hopefully) *O(1 + 𝜀)* JS startup.
-- Limited/no action required by web developer.
+
+--
+
+- All domain knowledge can be part of the toolchain/CDN.
+- Requires limited/no action by web developer.
+
+--
+
 - Energy-efficient.
+- Ideas should work with other languages.
 
 ---
 
@@ -879,9 +902,9 @@ Can we modify our AST to make it possible?
 
 - [JS AST](https://binast.github.io/ecmascript-binary-ast/#binast-tree-grammar) (*)
 - [AST ⇒ original semantics](https://binast.github.io/ecmascript-binary-ast/#binast-transformation) (*)
-- TC39 Proposal, passed stage 0.
+- TC39 Proposal, passed stage 1.
 
-(*) Shu-yu Guo (Bloomberg).
+(*) Mostly Shu-yu Guo (Bloomberg).
 
 ---
 
@@ -896,13 +919,15 @@ Can we modify our AST to make it possible?
 
 ## Next steps
 
-- Finish SpiderMonkey implementations.
-- Finish ongoing experiments.
-- Work on compression.
-- Real-world tests with Facebook WebPerf team.
-- Real-world tests with other partners.
-- Pass TC39 stage 1.
-- Get it adopted by all VMs.
+- Reference implementation
+    - Work on compression.
+    - Finish ongoing experiments.
+- Real-world data
+    - Finish SpiderMonkey implementation.
+    - Real-world tests with partners.
+- Language
+    - Pass TC39 stage 2.
+    - Get it adopted by all VMs.
 
 ---
 
