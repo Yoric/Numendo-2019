@@ -63,11 +63,11 @@ Parsing 1Mb of JavaScript:
 
 --
 
-Yes, but...
+Sure, but...
 
 ---
 
-.center[## Why is it a bottlneck?]
+.center[## Why is it a bottleneck?]
 
 ---
 
@@ -143,7 +143,7 @@ Protocol:
 
 > Could we speed parsing by using a better lexer?
 
-- Parse duration change: * ~0.3
+- Parse duration change: *0.3
 - Original verification time: 𝜖
 
 ⇒ Experiment conclusive. Let's go Binary AST.
@@ -247,7 +247,7 @@ EagerFunctionDeclaration:
 
 > Can we design a binary source format to transport ASTs, within our requirements?
 
-Experiment successful: yes, we can.
+⇒ Experiment successful: yes, we can.
 
 --
 
@@ -283,7 +283,7 @@ Can we do it with text JavaScript source?
 
 ---
 
-## Interlude : the evils of eval (1)
+## Interlude - the evils of eval (1)
 
 Compare
 
@@ -302,7 +302,7 @@ Compare
 
 ---
 
-## Interlude : the evils of eval (2)
+## Interlude - the evils of eval (2)
 
 ```js
 (function() {
@@ -334,7 +334,7 @@ or a block, it needs critical information:
 
 ## Experiment 2.1 - Result
 
-> Streaming compilers can amortize the cost of fetching + decompressiong to *O(1 + 𝜀)*
+> Streaming compilers can amortize the cost of fetching + decompression to *O(1 + 𝜀)*
 > by folding it into compilation
 >
 > Can we do it with text JavaScript source?
@@ -359,6 +359,10 @@ of presence/absence of direct `eval`, etc.
 --
 
 Yes, you have heard the word "Proof-Carrying Code" in JavaScript.
+
+--
+
+No, it's not April 1st.
 
 ---
 
@@ -407,7 +411,7 @@ or `hasDirectEval` was proven false, throw `SyntaxError`.
 
 --
 
-Or "If the proof is false, reject it."
+== "If the proof is false, reject it."
 
 ---
 
@@ -454,7 +458,7 @@ Would lazier parsing make things faster?
 
 1. Evaluate first-parse time saved by Syntax Parsing.
 2. Tweak unsafe binary parser to skip nested/all functions.
-3. Evaluate time spent storing lazy thunks.
+3. Evaluate time spent reifying thunks.
 4. Compare speed (Facebook Chat, Firefox Devtools).
 
 ---
@@ -467,7 +471,7 @@ First-parse time effect:
 - Binary Parsing ⇒ Syntax Binary Parsing: * 0.8;
 - Binary Parsing ⇒ Binary Parsing (skip nested): * 0.45;
 - Binary Parsing ⇒ Binary Parsing (skip functions): * 0.25;
-- Time spent storing lazy thunks: 𝜀.
+- Time spent reifying thunks: 𝜀.
 
 --
 
@@ -551,9 +555,8 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
 
 > Can we alter our binary source format to allow lazy parsing source files, within our constraints?
 
---
 
-Experiment successful: yes, we can.
+⇒ Experiment successful: yes, we can.
 
 ---
 
