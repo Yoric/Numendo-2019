@@ -14,7 +14,7 @@
 
 - Motivation
 - The high cost of lexing
-- The high cost of analyzing alone
+- The high cost of analyzing
 - The high cost of parsing
 - The high cost of fetching
 - Conclusions
@@ -248,7 +248,7 @@ That's just the beginning.
 
 ---
 
-# III. The high cost of analyzing alone
+# III. The high cost of analyzing
 
 ---
 
@@ -298,7 +298,7 @@ Compare
 
 ---
 
-## The high cost of analyzing alone
+## Blocked by analysis
 
 Before JS bytecode can compile a function node
 or a block, it needs critical information:
@@ -307,10 +307,6 @@ or a block, it needs critical information:
 - list of variables declared in children nodes;
 - presence of direct calls to `eval` in subnodes;
 - list of variables captured by siblings/subnode nested functions.
-
---
-
-Corollary: The entire program must be parsed and verified before compilation.
 
 ---
 
