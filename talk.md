@@ -639,22 +639,26 @@ Can we modify our AST to make it possible?
 ## What we have
 
 - Clear roadmap towards from bottleneck to (hopefully) *O(1 + 𝜀)* JS startup.
-- In most cases, no action required by web developer.
+- Limited/no action required by web developer.
+- Energy-efficient.
 
---
+---
 
-- Specifications:
-  - [JS AST](https://binast.github.io/ecmascript-binary-ast/#binast-tree-grammar) (*)
-  - [AST ⇒ original semantics](https://binast.github.io/ecmascript-binary-ast/#binast-transformation) (*)
-  - TC39 Proposal, passed stage 0.
+## Specifications
+
+- [JS AST](https://binast.github.io/ecmascript-binary-ast/#binast-tree-grammar) (*)
+- [AST ⇒ original semantics](https://binast.github.io/ecmascript-binary-ast/#binast-transformation) (*)
+- TC39 Proposal, passed stage 0.
+
 (*) Shu-yu Guo (Bloomberg).
 
---
+---
 
-- Tools
-  - [Reference encoder/decoder](https://github.com/binast/binjs-ref).
-  - [Manipulate, verify grammars](https://github.com/binast/binjs-ref).
-  - [A parser generator towards C++, Rust](https://github.com/binast/binjs-ref).
+## Tools
+
+- [Reference encoder/decoder](https://github.com/binast/binjs-ref).
+- [Manipulate, verify grammars](https://github.com/binast/binjs-ref).
+- [A parser generator towards C++, Rust](https://github.com/binast/binjs-ref).
 
 
 ---
@@ -663,15 +667,11 @@ Can we modify our AST to make it possible?
 
 - Finish SpiderMonkey implementations.
 - Finish ongoing experiments.
+- Work on compression.
 - Real-world tests with Facebook WebPerf team.
 - Real-world tests with other partners.
 - Pass TC39 stage 1.
 - Get it adopted by all VMs.
-
---
-
-- Save the world!
-
 
 ---
 
