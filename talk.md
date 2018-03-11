@@ -14,9 +14,9 @@
 
 - Problem statement
 - The high cost of lexing
-- The high cost of analyzing
-- The high cost of parsing
-- The high cost of fetching
+- The true cost of analyzing
+- The unnecessary cost of parsing
+- The avoidable cost of fetching
 - Conclusions
 
 ---
@@ -93,9 +93,13 @@ By contrast:
 
 ⇒ Per-byte cost is ~0.
 
---
 
-Can we get close to this without changing the semantics of JavaScript?
+---
+
+
+## Better question
+
+Could we get JS startup close to Native startup without changing the semantics of JavaScript?
 
 ---
 
@@ -270,7 +274,7 @@ That's just the beginning.
 
 ---
 
-# III. The high cost of analyzing
+# III. The true cost of analyzing
 
 ---
 
@@ -435,11 +439,11 @@ or `hasDirectEval` was proven false, throw `SyntaxError`.
 
 ---
 
-# IV. The high cost of parsing
+# IV. The unnecessary cost of parsing
 
 ---
 
-## The high cost of parsing
+## The unnecessary cost of parsing
 
 Recent JS VMs implement a semi-lazy strategy ("Syntax Parsing"):
 - parse and verify the entire file;
@@ -571,7 +575,7 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
 
 ---
 
-# V. The high cost of fetching
+# V. The avoidable cost of fetching
 ## (Future work)
 
 ---
