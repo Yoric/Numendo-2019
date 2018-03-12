@@ -28,10 +28,6 @@ Example: SpiderMonkey
 3. Optimizing native compiler
 4. Also, Inline Caches
 
---
-
-That's a bit too much.
-
 ---
 
 # Objectives
@@ -151,19 +147,7 @@ New **runtime** tools introduced:
 
 ---
 
-# Beyond multi-stage compilation
-
-So far, we have a variant of multi-stage compilation.
-
-How do we go further?
-
---
-
-Extend the toolset.
-
----
-
-## Example extension: tracing
+## Extracting a tracing compiler
 
 ```rust
 opcode!(Op::Add => {

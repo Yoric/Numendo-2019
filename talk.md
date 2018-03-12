@@ -130,9 +130,13 @@ Lexing JavaScript is pretty ugly:
 
 ---
 
-## Experiment 1.1
+## Question 1.1
 
 Could we speed parsing by using a better lexer?
+
+--
+
+## Experiment 1.1
 
 Protocol:
 
@@ -143,11 +147,11 @@ Protocol:
 
 ---
 
-## Experiment 1.1 - Result
+## Experiment 1.1 - Data & Conclusion
 
 > Could we speed parsing by using a better lexer?
 
-- Parse duration change: *0.3
+- Text Parse ⇒ Unsafe Binary Parse duration: *0.3
 - Original verification time: 𝜖
 
 ⇒ Experiment conclusive. Let's go Binary AST.
@@ -158,6 +162,15 @@ Protocol:
 
 Can we design a binary source format to transport ASTs,
 within our requirements?
+
+---
+
+## Strategy
+
+- Specify separately the AST and the binary container.
+- Specify AST ⇒ original text-based semantics.
+- Specify fine-grained language upgrade mechanism.
+- Adopt AST nodes that roughly match text parsing rules.
 
 ---
 
@@ -324,7 +337,7 @@ Compare
 
 ---
 
-## Blocked by analysis
+## The true cost of analyzing
 
 Before JS bytecode can compile a function node
 or a block, it needs critical information:
@@ -362,7 +375,7 @@ of presence/absence of direct `eval`, etc.
 
 --
 
-Yes, you have heard the word "Proof-Carrying Code" in JavaScript.
+Yes, you have heard the words "Proof-Carrying Code" in JavaScript.
 
 --
 
@@ -415,7 +428,7 @@ or `hasDirectEval` was proven false, throw `SyntaxError`.
 
 --
 
-== "If the proof is false, reject it."
+aka "If the proof is false, reject it."
 
 ---
 
@@ -503,6 +516,14 @@ Can we perform lazy parsing on text source?
 
 Can we alter our binary source format to allow lazy parsing source files,
 within our constraints?
+
+---
+
+## Strategy
+
+- Meta-specify laziness at grammar-level, binary container will follow.
+- Let the encoder decide what is best left lazy.
+- Introduce a mechanism to represent lazy syntax errors.
 
 ---
 
@@ -600,6 +621,17 @@ Can we modify our Binary AST to make it possible?
 
 ---
 
+## Strategy
+
+- Code we need now should appear before code we don't need yet.
+
+--
+
+- This transformation exists on native executables.
+- Gains witnessed on Firefox executable: *0.9 from I/O reduction. Source: [Mike Hommey](https://glandium.org/blog/?p=1296) (Mozilla).
+
+
+---
 
 ## Low-level: Binary tokens
 
@@ -661,7 +693,7 @@ Can we modify our Binary AST to make it possible?
 --
 
 - All domain knowledge can be part of the toolchain/CDN.
-- Requires limited/no action by web developer.
+- Benefits require limited/no action by web developer.
 
 --
 
@@ -707,3 +739,9 @@ Can we modify our Binary AST to make it possible?
 
 .center[Interested in collaborations!]
 
+---
+
+# Bonus slides!
+
+- [About me](about.html)
+- [Holy JIT](holyjit.html)
