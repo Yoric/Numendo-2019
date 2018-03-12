@@ -245,17 +245,6 @@ blockquote {
 
 ---
 
-## Program
-
-- Problem statement
-- The high cost of lexing
-- The true cost of analyzing
-- The unnecessary cost of parsing
-- The avoidable cost of fetching
-- Conclusions
-
----
-
 # I. Problem statement
 
 ---
@@ -269,8 +258,6 @@ blockquote {
 ## Parsing + compiling is a bottleneck
 
 ![JavaScript parsing + compiling is a bottleneck](img/parsing times.png)
-
-.small[On average, parsing + compiling == 4.4s]
 
 .small[Source: [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201), Google]
 
@@ -367,9 +354,9 @@ Lexing JavaScript is pretty ugly:
 
 ## Question 1.1
 
-Could we speed parsing by using a better lexer?
+Could we speed parsing by using better tokens?
 
---
+---
 
 ## Experiment 1.1
 
@@ -420,7 +407,7 @@ function foo(x) {
 
 ---
 
-## Language specifications
+## AST specifications
 
 ```java
 interface EagerFunctionDeclaration {
@@ -501,10 +488,6 @@ EagerFunctionDeclaration:
 
 ⇒ Experiment successful: yes, we can.
 
---
-
-Limitation: no real-world benchmarks yet.
-
 ---
 
 # Status
@@ -578,9 +561,9 @@ Before JS bytecode can compile a function node
 or a block, it needs critical information:
 
 - everything above the node in the AST;
-- list of variables declared in children nodes;
 - presence of direct calls to `eval` in subnodes;
-- list of variables captured by siblings/subnode nested functions.
+- variables captured by nested functions;
+- ...
 
 ---
 
@@ -604,17 +587,16 @@ bytecode compilation, within our requirements?
 
 ## Strategy
 
-1. Consider the text parser as a mechanic for building (informal) proofs
+1. Imagine the parser as a mechanism to build proofs
 of presence/absence of direct `eval`, etc.
-2. Reverse proof obligations into Proof-Carrying Code.
+
+--
+
+2. Request Proof-Carrying Code.
 
 --
 
 Yes, you have heard the words "Proof-Carrying Code" in JavaScript.
-
---
-
-No, it's not April 1st.
 
 ---
 
@@ -695,10 +677,12 @@ aka "If the proof is false, reject it."
 
 Recent JS VMs implement a semi-lazy strategy ("Syntax Parsing"):
 - parse and verify the entire file;
-- only build AST for toplevel and toplevel functions;
+- only build AST for some functions;
 - re-parse and re-verify nested functions as needed.
 
---
+---
+
+## Question 3.1
 
 Would lazier parsing make things faster?
 
@@ -904,7 +888,7 @@ Can we modify our Binary AST to make it possible?
 
 ---
 
-# Status?
+# JavaScript, ca. 2021?
 
 1. **(WIP) O(1 + 𝜀)** Full fetch + decompress.
 2. **Removed** Transcode to UTF-8.
@@ -959,7 +943,7 @@ Can we modify our Binary AST to make it possible?
 ## Next steps
 
 - Reference implementation
-    - Work on compression.
+    - Compression.
     - Finish ongoing experiments.
 - Real-world data
     - Finish SpiderMonkey implementation.
