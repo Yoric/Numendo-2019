@@ -737,7 +737,7 @@ Can we modify our Binary AST to make it possible?
 
 .center[# Thank you very much!]
 
-.center[Interested in collaborations!]
+Slides available at https://tinyurl.com/DT-FBR-2018 .
 
 ---
 
