@@ -47,4 +47,4 @@
 
 ---
 
-.center[[Back to the presentation](talk.html#2)]
+.center[[Back to the presentation](talk.html#toc)]

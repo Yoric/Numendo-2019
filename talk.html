@@ -173,7 +173,6 @@ blockquote {
 .remark-inline-code {
     background-color:rgb(245, 245, 245);
     border: 1px inset black;
-    
 }
 
 .remark-code-line {
@@ -229,6 +228,10 @@ blockquote {
     right: 0;
     border: 0
 }
+
+.strike {
+    text-decoration: line-through;
+}
 		</style>
 	</head>
 	<body>
@@ -244,6 +247,19 @@ blockquote {
 .center[With Shu-yu Guo (Bloomberg), Vladan Djeric (Facebook WebPerf)]
 
 ---
+name: toc
+
+# Table of contents
+
+1. [Problem statement](#problem)
+2. [The high cost of lexing](#lexing)
+3. [The true cost of analyzing](#analyzing)
+4. [The unnecessary cost of parsing](#parsing)
+5. [The avoidable cost of fetching](#fetching)
+6. [Conclusions](#conclusions)
+
+---
+name: problem
 
 # I. Problem statement
 
@@ -268,7 +284,6 @@ blockquote {
 Parsing 1Mb of JavaScript:
 
 ![On mobile, things get up to 90x worse](img/mobile parsing times.jpeg)
-
 
 .small[Source: [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201), Google]
 
@@ -336,6 +351,7 @@ Could we get JS startup close to Native startup without changing the semantics o
 - Compatible with future versions of JavaScript.
 
 ---
+name: lexing
 
 # II. The high cost of lexing
 
@@ -459,7 +475,7 @@ EagerFunctionDeclaration:
     ...
     /* name: BindingIdentifier */ 1
       /* name: "foo"*/ 0
-    ...      
+    ...
 ```
 
 ---
@@ -493,7 +509,7 @@ EagerFunctionDeclaration:
 # Status
 
 1. Full fetch + decompress.
-2. **Removed** Transcode to UTF-8.
+2. **Removed** .strike[Transcode to UTF-8.]
 3. **Faster** Full parse + full verify + partial AST build.
 4. Bytecode compile partial AST.
 5. Start interpreter.
@@ -504,6 +520,7 @@ That's just the beginning.
 
 
 ---
+name: analyzing
 
 # III. The true cost of analyzing
 
@@ -640,12 +657,12 @@ interface AssertedParameterScope {
 
 ## Language specifications
 
-During compilation, if `parameterNames`, `capturedNames`
+During *compilation*, if `parameterNames`, `capturedNames`
 or `hasDirectEval` was proven false, throw `SyntaxError`.
 
 --
 
-aka "If the proof is false, reject it."
+aka "If the proof is false, reject it before running."
 
 ---
 
@@ -661,13 +678,14 @@ aka "If the proof is false, reject it."
 # Status
 
 1. Full fetch + decompress.
-2. **Removed** Transcode to UTF-8.
+2. **Removed** .strike[Transcode to UTF-8.]
 3. **Fast O(1 + 𝜀) (WIP)** Full parse + full verify + partial AST build.
 4. Bytecode compile partial AST.
 5. Start interpreter.
 
 
 ---
+name: parsing
 
 # IV. The unnecessary cost of parsing
 
@@ -766,7 +784,7 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
 
 --
 
-- Only affects new programs.
+- Only affects new programs (opt-in).
 - Only affects ill-behaved programs.
 - The encoder and browser may agree to skip parsing a function.
 
@@ -790,7 +808,7 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
       /* isAsync: false */ 0
       /* isGenerator: false */ 0
       ...
-    ...      
+    ...
 ```
 
 ---
@@ -807,13 +825,14 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
 # Status
 
 1. Full fetch + decompress.
-2. **Removed** Transcode to UTF-8.
-3. **Fast, lazy O(1 + 𝜀) (WIP)** Parse, verify, AST build.
+2. **Removed** .strike[Transcode to UTF-8.]
+3. **Fast, O(1 + 𝜀) (WIP)** .strike[Full] Parse + .strike[full] verify + partial AST build.
 4. Bytecode compile partial AST.
 5. Start interpreter.
 
 
 ---
+name: fetching
 
 # V. The avoidable cost of fetching
 ## (Future work)
@@ -822,7 +841,7 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
 
 ## Experiment 4.1
 
-Streaming **interpreters** can amortize the cost of fetching + decompressing **+ compiling** to *O(1 + 𝜀)*.
+Streaming **interpreters** can amortize the cost of **fetching + decompressing + compiling** to *O(1 + 𝜀)*.
 
 Can we do it with JavaScript text source?
 
@@ -870,14 +889,14 @@ Can we modify our Binary AST to make it possible?
   /* contents: EagerFunctionDeclaration */ 0
     /* isAsync: false */ 0
     /* isGenerator: false */ 0
-    ...      
+    ...
 ```
 
 ---
 
 ## Experiment 4.2 - Status
 
-> Streaming **interpreters** can amortize the cost of fetching + decompressing **+ compiling** to *O(1 + 𝜀)*.
+> Streaming **interpreters** can amortize the cost of **fetching + decompressing + compiling** to *O(1 + 𝜀)*.
 >
 > Can we modify our Binary AST to make it possible?
 
@@ -898,6 +917,7 @@ Can we modify our Binary AST to make it possible?
 
 
 ---
+name: conclusions
 
 # Conclusions
 
@@ -911,12 +931,13 @@ Can we modify our Binary AST to make it possible?
 
 --
 
-- All domain knowledge can be part of the toolchain/CDN.
-- Benefits require limited/no action by web developer.
+Also:
+
+- Planet-friendly.
+- Near transparent migration strategy.
 
 --
 
-- Energy-efficient.
 - Ideas should work with other languages.
 
 ---

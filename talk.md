@@ -9,6 +9,19 @@
 .center[With Shu-yu Guo (Bloomberg), Vladan Djeric (Facebook WebPerf)]
 
 ---
+name: toc
+
+# Table of contents
+
+1. [Problem statement](#problem)
+2. [The high cost of lexing](#lexing)
+3. [The true cost of analyzing](#analyzing)
+4. [The unnecessary cost of parsing](#parsing)
+5. [The avoidable cost of fetching](#fetching)
+6. [Conclusions](#conclusions)
+
+---
+name: problem
 
 # I. Problem statement
 
@@ -16,7 +29,7 @@
 
 ## Web application performance matters
 
-- "53% of visits are abandoned if a mobile site takes more than three seconds to load" (source: [DoubleClick](https://docs.google.com/viewerng/viewer?url=https://storage.googleapis.com/doubleclick-prod/documents/The_Need_for_Mobile_Speed_-_FINAL.pdf))
+- "53% of visits are abandoned if a mobile site takes more than three seconds *to load*" (source: [DoubleClick](https://docs.google.com/viewerng/viewer?url=https://storage.googleapis.com/doubleclick-prod/documents/The_Need_for_Mobile_Speed_-_FINAL.pdf))
 
 ---
 
@@ -33,7 +46,6 @@
 Parsing 1Mb of JavaScript:
 
 ![On mobile, things get up to 90x worse](img/mobile parsing times.jpeg)
-
 
 .small[Source: [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201), Google]
 
@@ -101,6 +113,7 @@ Could we get JS startup close to Native startup without changing the semantics o
 - Compatible with future versions of JavaScript.
 
 ---
+name: lexing
 
 # II. The high cost of lexing
 
@@ -224,7 +237,7 @@ EagerFunctionDeclaration:
     ...
     /* name: BindingIdentifier */ 1
       /* name: "foo"*/ 0
-    ...      
+    ...
 ```
 
 ---
@@ -258,7 +271,7 @@ EagerFunctionDeclaration:
 # Status
 
 1. Full fetch + decompress.
-2. **Removed** Transcode to UTF-8.
+2. **Removed** .strike[Transcode to UTF-8.]
 3. **Faster** Full parse + full verify + partial AST build.
 4. Bytecode compile partial AST.
 5. Start interpreter.
@@ -269,6 +282,7 @@ That's just the beginning.
 
 
 ---
+name: analyzing
 
 # III. The true cost of analyzing
 
@@ -426,13 +440,14 @@ aka "If the proof is false, reject it before running."
 # Status
 
 1. Full fetch + decompress.
-2. **Removed** Transcode to UTF-8.
+2. **Removed** .strike[Transcode to UTF-8.]
 3. **Fast O(1 + 𝜀) (WIP)** Full parse + full verify + partial AST build.
 4. Bytecode compile partial AST.
 5. Start interpreter.
 
 
 ---
+name: parsing
 
 # IV. The unnecessary cost of parsing
 
@@ -555,7 +570,7 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
       /* isAsync: false */ 0
       /* isGenerator: false */ 0
       ...
-    ...      
+    ...
 ```
 
 ---
@@ -572,13 +587,14 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
 # Status
 
 1. Full fetch + decompress.
-2. **Removed** Transcode to UTF-8.
-3. **Fast, lazy O(1 + 𝜀) (WIP)** Parse, verify, AST build.
+2. **Removed** .strike[Transcode to UTF-8.]
+3. **Fast, O(1 + 𝜀) (WIP)** .strike[Full] Parse + .strike[full] verify + partial AST build.
 4. Bytecode compile partial AST.
 5. Start interpreter.
 
 
 ---
+name: fetching
 
 # V. The avoidable cost of fetching
 ## (Future work)
@@ -587,7 +603,7 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
 
 ## Experiment 4.1
 
-Streaming **interpreters** can amortize the cost of fetching + decompressing **+ compiling** to *O(1 + 𝜀)*.
+Streaming **interpreters** can amortize the cost of **fetching + decompressing + compiling** to *O(1 + 𝜀)*.
 
 Can we do it with JavaScript text source?
 
@@ -642,7 +658,7 @@ Can we modify our Binary AST to make it possible?
 
 ## Experiment 4.2 - Status
 
-> Streaming **interpreters** can amortize the cost of fetching + decompressing **+ compiling** to *O(1 + 𝜀)*.
+> Streaming **interpreters** can amortize the cost of **fetching + decompressing + compiling** to *O(1 + 𝜀)*.
 >
 > Can we modify our Binary AST to make it possible?
 
@@ -663,6 +679,7 @@ Can we modify our Binary AST to make it possible?
 
 
 ---
+name: conclusions
 
 # Conclusions
 
