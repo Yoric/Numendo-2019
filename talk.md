@@ -4,7 +4,7 @@
 
 .center[**How fast can JavaScript start?**]
 
-.center[[David Teller](about.html), Mozilla]
+.center[[David Teller](#about), Mozilla]
 
 .center[With Shu-yu Guo (Bloomberg), Vladan Djeric (Facebook WebPerf)]
 
@@ -777,5 +777,138 @@ Slides available at https://tinyurl.com/DT-FBR-2018 .
 
 # Bonus slides!
 
-- [About me](about.html)
+---
+name: about
+
+## About me
+
+**Name** David Teller
+
+**Role** JavaScript Language Engineer at Mozilla
+
+**Keywords** Programming languages, performance, safety, mentoring
+
+---
+
+## From Libraries to Operating Systems
+
+- [OCaml, Batteries Included](https://github.com/ocaml-batteries-team/batteries-included) (lead + mentor)
+- [Async I/O](https://dutherenverseauborddelatable.wordpress.com/2011/12/06/introducing-javascript-native-file-management/) (lead + mentor)
+- [Async Exception/Error handling](https://dutherenverseauborddelatable.wordpress.com/2013/10/14/recent-changes-to-promise-jsm-and-task-jsm/) (lead + mentor)
+- [Async Shutdown](https://dutherenverseauborddelatable.wordpress.com/2014/05/26/shutting-down-asynchronously-part-2/) (lead + mentor) ([more](#zoom_shutdown))
+- [Project Link](https://github.com/fxbox/foxbox) (lead)
+- [Redox OS](https://www.redox-os.org) (contributor)
+
+---
+
+## Programming languages
+
+- Prototyping + perf testing JS async [1](https://dutherenverseauborddelatable.wordpress.com/2011/12/13/os-file-step-by-step-the-schedule-api/),
+[2](https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Promise.jsm), [3](https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Task.jsm), [4](https://dutherenverseauborddelatable.wordpress.com/2012/05/02/c-data-finalization-in-javascript/) (lead + mentor)
+- [JS Performance self-monitoring](https://dutherenverseauborddelatable.wordpress.com/2015/10/27/designing-firefoxs-performance-stats-monitor-1/) (lead + mentor)
+- [Opalang](https://github.com/MLstate/opalang) ([more](#zoom_opalang)) (lead + mentor)
+- [Thinkerbell](https://yoric.github.io/post/thinkerbell-postmortem/) ([more](#zoom_thinkerbell)) (lead)
+- [Rust](https://www.rust-lang.org) (contributor)
+- [HolyJIT](https://blog.mozilla.org/javascript/2017/10/20/holyjit-a-new-hope/) ([more](#zoom_holyjit)) (mentor)
+- [JS Binary AST](https://fosdem.org/2018/schedule/event/mozilla_web_faster_js_binary_ast/) (lead)
+
+---
+
+## Type systems
+- [Resource reuse for π-calculus](https://www.researchgate.net/publication/228514964_Resources_garbage-collection_and_the_pi-calculus), [Erlang](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.636.2562) (solo)
+- [Effects for syscall analysis](https://dutherenverseauborddelatable.wordpress.com/2008/06/03/extrapol-part-1-from-c-to-effects/) (lead)
+- [Distributed privacy](https://github.com/MLstate/opalang) (lead + mentor)
+- [SmartHome physical safety](https://yoric.github.io/post/thinkerbell-postmortem/) (lead)
+
+---
+
+.center[Many interesting topics, few opportunities to publish :/]
+
+---
+
+.center[[Back to the presentation](talk.html#toc)]
+
+---
+
+name: zoom_holyjit
+
+## About: HolyJIT
+
+**Objective** Extract entire JIT from a single, strongly-typed, semantics of the language
+and a library of annotations.
+
+**Role** Mentoring.
+
+**Status** Research has just started. Proof of concept available.
+
+---
+
+name: zoom_thinkerbell
+
+## About: Thinkerbell
+
+**Objective** Rust-based Domain-Specific Language for the Smart Home (part of Project Link).
+
+**Features**
+
+- Strongly-typed, cross-vendor device driver system.
+- Strong type system for safety wrt physical accidents, featuring units.
+- Fault-tolerant, upgrade-tolerant, repurposing-tolerant semantics.
+- Designed for energy efficiency.
+- Underlying process algebra (partial).
+- Visual syntax.
+
+**Status** Working Prototype
+
+**Possible future work** Finish process algebra.
+
+---
+
+name: zoom_opalang
+
+## About: Opalang
+
+**Setting** Multi-tiered programming language for the web.
+
+**Role** Research Lead.
+
+**Objective** Reinvent the language from scratch:
+
+- type systems (ML-style, privacy-aware);
+- client/server/db distribution mechanism;
+- concurrency, distribution, mobility, error models;
+- security-at-site-borders guarantees;
+- closure-per-client security mechanics;
+- LLVM compilation;
+- DBMS for functional structures;
+- ...
+
+---
+
+name: zoom_shutdown
+
+## About: Async Shutdown
+
+**Problem** Shutting down hundreds of fibers/threads/processes with interdependent and dynamic dependencies.
+
+**Role** Safety specialist.
+
+**Setting** Firefox developers unaware of the problem. High percentage of deadlocks, livelocks and data loss.
+
+**Mechanism**
+
+- Dynamic shutdown blocker model.
+- Resolution of shutdown blockers.
+- Error-tracking mechanism.
+
+**Nowadays** Used by all Firefox developers who manipulate data.
+
+**Possible future work** π-calculus definition/type system.
+
+---
+
+# More bonus slides
+
+---
+
 - [Holy JIT](holyjit.html)
