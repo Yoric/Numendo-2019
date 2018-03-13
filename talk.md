@@ -405,12 +405,12 @@ interface AssertedParameterScope {
 
 ## Language specifications
 
-During compilation, if `parameterNames`, `capturedNames`
+During *compilation*, if `parameterNames`, `capturedNames`
 or `hasDirectEval` was proven false, throw `SyntaxError`.
 
 --
 
-aka "If the proof is false, reject it."
+aka "If the proof is false, reject it before running."
 
 ---
 
@@ -531,7 +531,7 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
 
 --
 
-- Only affects new programs.
+- Only affects new programs (opt-in).
 - Only affects ill-behaved programs.
 - The encoder and browser may agree to skip parsing a function.
 
@@ -635,7 +635,7 @@ Can we modify our Binary AST to make it possible?
   /* contents: EagerFunctionDeclaration */ 0
     /* isAsync: false */ 0
     /* isGenerator: false */ 0
-    ...      
+    ...
 ```
 
 ---
@@ -676,12 +676,13 @@ Can we modify our Binary AST to make it possible?
 
 --
 
-- All domain knowledge can be part of the toolchain/CDN.
-- Benefits require limited/no action by web developer.
+Also:
+
+- Planet-friendly.
+- Near transparent migration strategy.
 
 --
 
-- Energy-efficient.
 - Ideas should work with other languages.
 
 ---
