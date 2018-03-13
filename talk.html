@@ -269,6 +269,10 @@ name: problem
 
 - "53% of visits are abandoned if a mobile site takes more than three seconds *to load*" (source: [DoubleClick](https://docs.google.com/viewerng/viewer?url=https://storage.googleapis.com/doubleclick-prod/documents/The_Need_for_Mobile_Speed_-_FINAL.pdf))
 
+--
+
+- "Apps became interactive in 8 seconds on desktop (using cable) and 16 seconds on mobile (Moto G4 over 3G)"(median value, source: [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201), Google)
+
 ---
 
 ## Parsing + compiling is a bottleneck
@@ -346,7 +350,7 @@ Could we get JS startup close to Native startup without changing the semantics o
 - Not a subset or a superset of JavaScript.
 - Not a bytecode.
 - Do not change the semantics of existing programs.
-- Do not change the semantics of well-behaved programs.
+- Do not change the semantics of well-formed programs.
 - As transparent as possible.
 - Compatible with future versions of JavaScript.
 
@@ -389,7 +393,9 @@ Protocol:
 
 > Could we speed parsing by using a better lexer?
 
-- Text Parse ⇒ Unsafe Binary Parse duration: *0.3
+Durations:
+
+- Unsafe Binary Parse vs. Text Parse: *0.3
 - Original verification time: 𝜖
 
 ⇒ Experiment conclusive. Let's go Binary AST.
@@ -458,6 +464,18 @@ EagerFunctionDeclaration:
 
 ---
 
+## Validating
+
+![Converting AST to JS text source](img/valid-label.png)
+
+---
+
+## Ecmaify
+
+![Converting AST to JS text source](img/ecmaify.png)
+
+---
+
 ## Low-level: Binary tokens
 
 ```js
@@ -477,6 +495,12 @@ EagerFunctionDeclaration:
       /* name: "foo"*/ 0
     ...
 ```
+
+---
+
+## Binify
+
+![Converting AST to binary](img/binify.png)
 
 ---
 
@@ -655,9 +679,15 @@ interface AssertedParameterScope {
 
 ---
 
+## Validity semantics
+
+![Validity of eval (abridged)](img/valid-eval.png)
+
+---
+
 ## Language specifications
 
-During *compilation*, if `parameterNames`, `capturedNames`
+During **compilation**, if `parameterNames`, `capturedNames`
 or `hasDirectEval` was proven false, throw `SyntaxError`.
 
 --
@@ -719,12 +749,12 @@ Would lazier parsing make things faster?
 
 ## Experiment 3.1 - Result
 
-First-parse time effect:
+First-parse duration effect:
 
-- Full Parsing ⇒ Syntax Parsing: * 0.8;
-- Binary Parsing ⇒ Syntax Binary Parsing: * 0.8;
-- Binary Parsing ⇒ Binary Parsing (skip nested): * 0.45;
-- Binary Parsing ⇒ Binary Parsing (skip functions): * 0.25;
+- Syntax Parsing vs. Full Parsing: * 0.8;
+- Syntax Binary Parsing vs. Bin Parsing: * 0.8;
+- Bin Parsing (skip nested) vs . Bin Parsing: * 0.45;
+- Bin Parsing (skip functions) vs. Bin Parsing: * 0.25;
 - Time spent reifying thunks: 𝜀.
 
 --
@@ -785,7 +815,7 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
 --
 
 - Only affects new programs (opt-in).
-- Only affects ill-behaved programs.
+- Only affects ill-formed programs.
 - The encoder and browser may agree to skip parsing a function.
 
 ---
@@ -927,7 +957,8 @@ name: conclusions
 
 ## What we have
 
-- Clear roadmap towards from bottleneck to (hopefully) *O(1 + 𝜀)* JS startup.
+- Clear roadmap towards from bottleneck to fast and (hopefully)
+*O(1 + 𝜀)* JS startup.
 
 --
 
@@ -935,6 +966,7 @@ Also:
 
 - Planet-friendly.
 - Near transparent migration strategy.
+- Towards standard formal semantics for JavaScript?
 
 --
 
@@ -947,12 +979,13 @@ Also:
 - [JS AST](https://binast.github.io/ecmascript-binary-ast/#binast-tree-grammar) (*)
 - [AST ⇒ original semantics](https://binast.github.io/ecmascript-binary-ast/#binast-transformation) (*)
 - EcmaScript Proposal (TC39 stage 1).
+- Partial formal semantics.
 
-(*) Mostly Shu-yu Guo (Bloomberg).
+(*) With Shu-yu Guo (Bloomberg).
 
 ---
 
-## Tools
+## Tools developed
 
 - [Reference encoder/decoder](https://github.com/binast/binjs-ref).
 - [Manipulate, verify grammars](https://github.com/binast/binjs-ref).
@@ -972,6 +1005,7 @@ Also:
 - Language
     - Make it a standard (TC39 stage 2).
     - Get it adopted by all VMs.
+    - Finish formal semantics.
 
 ---
 
