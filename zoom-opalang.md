@@ -10,9 +10,7 @@
 - privacy-aware type system;
 - client/server/db distribution mechanism;
 - CPS compilation;
-- mobility of closures;
-- distributed shared state mechanics;
-- concurrency model;
+- concurrency, distribution, mobility model;
 - security-at-site-borders guarantees;
 - closure-per-client security mechanics;
 - LLVM compilation;
