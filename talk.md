@@ -276,8 +276,8 @@ That's just the beginning.
 
 ## Experiment 2.1
 
-Streaming compilers can amortize the cost of fetching + decompressing to *O(1 + 𝜀)*
-by folding it into compilation.
+Streaming compilers can amortize the cost of compilation to *O(1 + 𝜀)*
+by folding it into fetching + decompressing.
 
 Can we do it with text JavaScript source?
 
@@ -334,8 +334,8 @@ or a block, it needs critical information:
 
 ## Experiment 2.1 - Result
 
-> Streaming compilers can amortize the cost of fetching + decompression to *O(1 + 𝜀)*
-> by folding it into compilation
+> Streaming compilers can amortize the cost of compilation to *O(1 + 𝜀)*
+> by folding it into fetching + decompressing.
 >
 > Can we do it with text JavaScript source?
 
@@ -425,9 +425,9 @@ aka "If the proof is false, reject it."
 
 # Status
 
-1. **(WIP) O(1 + 𝜀)** Full fetch + decompress.
+1. Full fetch + decompress.
 2. **Removed** Transcode to UTF-8.
-3. **Faster** Full parse + full verify + partial AST build.
+3. **Fast O(1 + 𝜀) (WIP)** Full parse + full verify + partial AST build.
 4. Bytecode compile partial AST.
 5. Start interpreter.
 
@@ -571,9 +571,9 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
 
 # Status
 
-1. **(WIP) O(1 + 𝜀)** Full fetch + decompress.
+1. Full fetch + decompress.
 2. **Removed** Transcode to UTF-8.
-3. **Faster + made lazy** Full parse + full verify + partial AST build.
+3. **Fast, lazy O(1 + 𝜀) (WIP)** Parse, verify, AST build.
 4. Bytecode compile partial AST.
 5. Start interpreter.
 
@@ -599,7 +599,7 @@ Clearly, no.
 
 ## Experiment 4.2 (WIP)
 
-Streaming **interpreters** can amortize the cost of fetching + decompressing **+ compiling** to *O(1 + 𝜀)*.
+Streaming **interpreters** can amortize the cost of **fetching + decompressing + compiling** to *O(1 + 𝜀)*.
 
 Can we modify our Binary AST to make it possible?
 
@@ -655,10 +655,10 @@ Can we modify our Binary AST to make it possible?
 
 # JavaScript, ca. 2021?
 
-1. **(WIP) O(1 + 𝜀)** Full fetch + decompress.
+1. **O(1 + 𝜀)** Full fetch + decompress.
 2. **Removed** Transcode to UTF-8.
-3. **(Future) O(1 + 𝜀)** Full parse + full verify + partial AST build.
-4. **(Future) O(1 + 𝜀)** Bytecode compile partial AST.
+3. **Fast, lazy O(1 + 𝜀)** Parse, verify, AST build.
+4. **O(1 + 𝜀)** Bytecode compile partial AST.
 5. Start interpreter.
 
 
@@ -690,7 +690,7 @@ Can we modify our Binary AST to make it possible?
 
 - [JS AST](https://binast.github.io/ecmascript-binary-ast/#binast-tree-grammar) (*)
 - [AST ⇒ original semantics](https://binast.github.io/ecmascript-binary-ast/#binast-transformation) (*)
-- TC39 Proposal, passed stage 1.
+- EcmaScript Proposal (TC39 stage 1).
 
 (*) Mostly Shu-yu Guo (Bloomberg).
 
@@ -714,7 +714,7 @@ Can we modify our Binary AST to make it possible?
     - Finish SpiderMonkey implementation.
     - Real-world tests with partners.
 - Language
-    - Pass TC39 stage 2.
+    - Make it a standard (TC39 stage 2).
     - Get it adopted by all VMs.
 
 ---
