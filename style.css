@@ -208,6 +208,11 @@ blockquote {
     display: inline;
 }
 
+.half img {
+    max-height: 12em;
+    display: inline;
+}
+
 .thatsimple img {
     max-height: 300px;
 }

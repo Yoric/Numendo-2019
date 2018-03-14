@@ -29,11 +29,11 @@ name: problem
 
 ## Web application performance matters
 
-- "53% of visits are abandoned if a mobile site takes more than three seconds *to load*" (source: [DoubleClick](https://docs.google.com/viewerng/viewer?url=https://storage.googleapis.com/doubleclick-prod/documents/The_Need_for_Mobile_Speed_-_FINAL.pdf))
+- "53% of visits are abandoned if a mobile site takes more than **3 seconds** to load" (source: [DoubleClick](https://docs.google.com/viewerng/viewer?url=https://storage.googleapis.com/doubleclick-prod/documents/The_Need_for_Mobile_Speed_-_FINAL.pdf))
 
 --
 
-- "Apps became interactive in 8 seconds on desktop (using cable) and 16 seconds on mobile (Moto G4 over 3G)"(median value, source: [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201), Google)
+- "Apps became interactive in **8 seconds** on desktop (using cable) and **16 seconds** on mobile (Moto G4 over 3G)"(median value, source: [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201), Google)
 
 ---
 
@@ -765,7 +765,7 @@ Also:
 - Language
     - Make it a standard (TC39 stage 2).
     - Get it adopted by all VMs.
-    - Finish formal semantics.
+    - Finish formal semantics (JSCert / KJS?).
 
 ---
 
@@ -834,12 +834,9 @@ name: zoom_holyjit
 
 ## About: HolyJIT
 
-**Objective** Extract entire JIT from a single, strongly-typed, semantics of the language
-and a library of annotations.
+.center[.half[![Extract an entire JIT from a single, strongly-typed, semantics of the language and a library of annotations](img/holyjit.png)]]
 
-**Role** Mentoring.
-
-**Status** Research has just started. Proof of concept available.
+.center[(early stage research)]
 
 ---
 
@@ -847,20 +844,7 @@ name: zoom_thinkerbell
 
 ## About: Thinkerbell
 
-**Objective** Rust-based Domain-Specific Language for the Smart Home (part of Project Link).
-
-**Features**
-
-- Strongly-typed, cross-vendor device driver system.
-- Strong type system for safety wrt physical accidents, featuring units.
-- Fault-tolerant, upgrade-tolerant, repurposing-tolerant semantics.
-- Designed for energy efficiency.
-- Underlying process algebra (partial).
-- Visual syntax.
-
-**Status** Working Prototype
-
-**Possible future work** Finish process algebra.
+.center[.half[![Domain-Specific Language for the Smart Home](img/thinkerbell.png)]]
 
 ---
 
@@ -868,20 +852,7 @@ name: zoom_opalang
 
 ## About: Opalang
 
-**Setting** Multi-tiered programming language for the web.
-
-**Role** Research Lead.
-
-**Objective** Reinvent the language from scratch:
-
-- type systems (ML-style, privacy-aware);
-- client/server/db distribution mechanism;
-- concurrency, distribution, mobility, error models;
-- security-at-site-borders guarantees;
-- closure-per-client security mechanics;
-- LLVM compilation;
-- DBMS for functional structures;
-- ...
+.center[.half[![Domain-Specific Language for the Smart Home](img/opalang.png)]]
 
 ---
 
@@ -889,19 +860,9 @@ name: zoom_shutdown
 
 ## About: Async Shutdown
 
-**Problem** Shutting down hundreds of fibers/threads/processes with interdependent and dynamic dependencies.
+Shutdown primitives for hundreds of fibers/threads/processes with dynamic dependencies.
 
-**Role** Safety specialist.
-
-**Setting** Firefox developers unaware of the problem. High percentage of deadlocks, livelocks and data loss.
-
-**Mechanism**
-
-- Dynamic shutdown blocker model.
-- Resolution of shutdown blockers.
-- Error-tracking mechanism.
-
-**Nowadays** Used by all Firefox developers who manipulate data.
+.center[.half[![A tiny subset of shutdown dependencies](img/async shutdown.png)]]
 
 **Possible future work** π-calculus definition/type system.
 
