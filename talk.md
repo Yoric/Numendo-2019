@@ -156,7 +156,7 @@ Protocol:
 Durations:
 
 - Unsafe Binary Parse vs. Text Parse: *0.3
-- Original verification time: 𝜖
+- Original verification time: 𝜀
 
 ⇒ Experiment conclusive. Let's go Binary AST.
 
@@ -726,7 +726,6 @@ Also:
 
 - Planet-friendly.
 - Near transparent migration strategy.
-- Towards standard formal semantics for JavaScript?
 
 --
 
@@ -786,7 +785,9 @@ name: about
 
 **Role** JavaScript Language Engineer at Mozilla
 
-**Keywords** Programming languages, performance, safety, mentoring
+**Multiclass** Researcher + Developer + Mentor
+
+**Keywords** Programming languages, performance, safety
 
 ---
 
@@ -796,6 +797,7 @@ name: about
 - [Async I/O](https://dutherenverseauborddelatable.wordpress.com/2011/12/06/introducing-javascript-native-file-management/) (lead + mentor)
 - [Async Exception/Error handling](https://dutherenverseauborddelatable.wordpress.com/2013/10/14/recent-changes-to-promise-jsm-and-task-jsm/) (lead + mentor)
 - [Async Shutdown](https://dutherenverseauborddelatable.wordpress.com/2014/05/26/shutting-down-asynchronously-part-2/) (lead + mentor) ([more](#zoom_shutdown))
+- [Data safety](https://dutherenverseauborddelatable.wordpress.com/2014/06/26/firefox-the-browser-that-has-your-backup/) (lead + mentor)
 - [Project Link](https://github.com/fxbox/foxbox) (lead)
 - [Redox OS](https://www.redox-os.org) (contributor)
 
