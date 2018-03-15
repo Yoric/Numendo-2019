@@ -601,7 +601,7 @@ Compare
 
 ## The true cost of analyzing
 
-Before JS bytecode can compile a function node
+Before JS can bytecode-compile a function node
 or a block, it needs critical information:
 
 - everything above the node in the AST;
@@ -960,8 +960,7 @@ name: conclusions
 
 ## What we have
 
-- Clear roadmap towards from bottleneck to fast and (hopefully)
-*O(1 + 𝜀)* JS startup.
+- Clear roadmap from bottleneck towards fast *O(1 + 𝜀)* JS startup.
 
 --
 
@@ -1065,45 +1064,21 @@ name: about
 - [Distributed privacy](https://github.com/MLstate/opalang) (lead + mentor)
 - [SmartHome physical safety](https://yoric.github.io/post/thinkerbell-postmortem/) (lead)
 
----
-
-.center[Many interesting topics, few opportunities to publish :/]
-
----
-
-.center[[Back to the presentation](talk.html#toc)]
-
----
-
-name: zoom_holyjit
-
-## About: HolyJIT
-
-.center[.half[![Extract an entire JIT from a single, strongly-typed, semantics of the language and a library of annotations](img/holyjit.png)]]
-
-.center[(early stage research)]
-
----
-
-name: zoom_thinkerbell
-
-## About: Thinkerbell
-
-.center[.half[![Domain-Specific Language for the Smart Home](img/thinkerbell.png)]]
 
 ---
 
 name: zoom_opalang
 
-## About: Opalang
+## 2009-2011: Opalang
 
-.center[.half[![Domain-Specific Language for the Smart Home](img/opalang.png)]]
+.center[.half[![Multi-tiered programming language for a "sane, safe, secure" web](img/opalang.png)]]
+
 
 ---
 
 name: zoom_shutdown
 
-## About: Async Shutdown
+## 2014: Async Shutdown
 
 Shutdown primitives for hundreds of fibers/threads/processes with dynamic dependencies.
 
@@ -1113,7 +1088,31 @@ Shutdown primitives for hundreds of fibers/threads/processes with dynamic depend
 
 ---
 
+name: zoom_thinkerbell
+
+## 2016: Thinkerbell
+
+.center[.half[![Domain-Specific Language for the Smart Home](img/thinkerbell.png)]]
+
+---
+
+name: zoom_holyjit
+
+## 2018-?: HolyJIT
+
+.center[.half[![Extract an entire JIT from a single, strongly-typed, semantics of the language and a library of annotations](img/holyjit.png)]]
+
+.center[(early stage research)]
+
+---
+
+.center[Many interesting topics, few opportunities to publish :/]
+
+---
+
 # More bonus slides
+
+.center[[2017-?: JS Binary AST](talk.html#toc)]
 
 ---
 

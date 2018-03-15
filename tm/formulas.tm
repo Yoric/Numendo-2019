@@ -42,5 +42,6 @@
     <associate|auto-2|<tuple|2|?|../../../../.TeXmacs/texts/scratch/no_name_1.tm>>
     <associate|auto-3|<tuple|3|?|../../../../.TeXmacs/texts/scratch/no_name_1.tm>>
     <associate|auto-4|<tuple|4|?|../../../../.TeXmacs/texts/scratch/no_name_1.tm>>
+    <associate|auto-5|<tuple|1|?|../../../../.TeXmacs/texts/scratch/no_name_1.tm>>
   </collection>
 </references>
