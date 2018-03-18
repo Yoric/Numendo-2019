@@ -1,4 +1,4 @@
-# The JavaScript Binary AST
+.center[# The JavaScript Binary AST]
 
 .center[or]
 
@@ -201,6 +201,17 @@ interface EagerFunctionDeclaration {
   attribute FunctionBody body;
 };
 ```
+---
+
+## Validating
+
+![Converting AST to JS text source](img/valid-label.png)
+
+---
+
+## Ecmaify
+
+![Converting AST to JS text source](img/ecmaify.png)
 
 ---
 
@@ -221,18 +232,6 @@ EagerFunctionDeclaration:
         rest: null
     body: ...
 ```
-
----
-
-## Validating
-
-![Converting AST to JS text source](img/valid-label.png)
-
----
-
-## Ecmaify
-
-![Converting AST to JS text source](img/ecmaify.png)
 
 ---
 
@@ -841,7 +840,7 @@ Shutdown primitives for hundreds of fibers/threads/processes with dynamic depend
 
 .center[.half[![A tiny subset of shutdown dependencies](img/async shutdown.png)]]
 
-**Possible future work** π-calculus definition/type system.
+**Possible future work** π-calculus definition/type system. Finalization. Affine/session types.
 
 ---
 
