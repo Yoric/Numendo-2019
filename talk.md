@@ -577,6 +577,11 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
 - Only affects ill-formed programs.
 - The encoder and browser may agree to skip parsing a function.
 
+
+---
+
+![Altered semantics](img/lazy-parsing.png)
+
 ---
 
 ## Low-level: Binary tokens
@@ -840,7 +845,7 @@ Shutdown primitives for hundreds of fibers/threads/processes with dynamic depend
 
 .center[.half[![A tiny subset of shutdown dependencies](img/async shutdown.png)]]
 
-**Possible future work** π-calculus definition/type system. Finalization. Affine/session types.
+**Possible future work** Formal semantics of concurrent destructors.
 
 ---
 
@@ -866,10 +871,10 @@ name: zoom_holyjit
 
 ---
 
-# More bonus slides
-
 .center[[2017-?: JS Binary AST](talk.html#toc)]
 
 ---
+
+#More bonus slides
 
 - [Holy JIT](holyjit.html)

@@ -24,15 +24,21 @@
     <tabular*|<tformat|<table|<row|<cell|<text|><dfrac|\<Gamma\>\<oplus\><around*|(|<math-ss|label>:l|)>\<vdash\>N<rsub|body>:<math-tt|Statement>|\<Gamma\>\<vdash\>N:<math-tt|LabelledStatement>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|LabelledStatement>>>|<row|<cell|N<around*|[|<math-tt|body>|]>=N<rsub|body>>>|<row|<cell|N<around*|[|<math-tt|label>|]>=l>>|<row|<cell|l\<neq\>\<epsilon\>>>>>>>>|<row|<cell|<text|><dfrac||\<Gamma\>\<vdash\>N:<math-tt|BreakStatement>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|BreakStatement>>>|<row|<cell|N<around*|[|<math-tt|label>|]>=l>>|<row|<cell|l\<in\>\<Gamma\>.label>>>>>>>>>>
   </equation*>
 
-  <section|Bytecode Compilation (with Asserted Scope)>
+  <section|Validate AST during Bytecode Compilation (with Asserted Scope)>
 
   <\equation*>
-    <tabular*|<tformat|<table|<row|<cell|<text|><dfrac|\<Gamma\>\<vdash\>N<around*|[|<math-tt|callee>|]>:<math-tt|Expression><space|1em>\<Gamma\>\<vdash\>N<around*|[|<math-tt|arguments>|]>:<math-tt|Arguments>|\<Gamma\>\<vdash\>N:<math-tt|CallExpression>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|CallExpression>>>|<row|<cell|N<around*|[|<math-tt|callee>|]><rsub|.>type\<neq\><math-tt|IdentifierExpression>>>>>>>>|<row|<cell|>>|<row|<cell|>>|<row|<cell|<text|><dfrac|\<Gamma\>\<vdash\>N<around*|[|<math-tt|callee>|]>:<math-tt|IdentifierExpression><space|1em>\<Gamma\>\<vdash\>N<around*|[|<math-tt|arguments>|]>:<math-tt|Arguments>|\<Gamma\>\<vdash\>N:<math-tt|CallExpression>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|CallExpression>>>|<row|<cell|N<around*|[|<math-tt|callee>|]><around*|[|<math-tt|name>|]>\<neq\><text|\Peval\Q>>>>>>>>|<row|<cell|>>|<row|<cell|>>|<row|<cell|<text|><dfrac|\<Gamma\>\<vdash\>N<around*|[|<math-tt|callee>|]>:<math-tt|IdentifierExpression><space|1em>\<Gamma\>\<vdash\>N<around*|[|<math-tt|arguments>|]>:<math-tt|Arguments>|\<Gamma\>\<vdash\>N:<math-tt|CallExpression>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|CallExpression>>>|<row|<cell|N<around*|[|<math-tt|callee>|]><around*|[|<math-tt|name>|]>=<text|\Peval\Q>>>|<row|<cell|>>|<row|<cell|\<Gamma\>.hasDirectEval>>>>>>>|<row|<cell|>>|<row|<cell|>>|<row|<cell|>>|<row|<cell|>>|<row|<cell|<text|><dfrac||\<Gamma\>\<vdash\>N:<math-tt|AssertedParameterScope>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|AssertedParameterScope>>>|<row|<cell|N<around*|[|<math-tt|capturedNames>|]>\<subseteq\>N<around*|[|<math-tt|parameterNames>|]>>>|<row|<cell|\<Gamma\>.hasDirectEval=N<around*|[|<math-tt|hasDirectEval>|]>>>>>>>>|<row|<cell|>>|<row|<cell|>>|<row|<cell|<text|><dfrac|<stack|<tformat|<table|<row|<cell|\<Gamma\>\<oplus\><around*|(|hasDirectEval:b|)>\<vdash\>N<around*|[|<math-tt|body>|]>:<math-tt|FunctionBody>>>|<row|<cell|\<Gamma\>\<oplus\><around*|(|hasDirectEval:b|)>\<vdash\>N<around*|[|<math-tt|parameterscope>|]>:<math-tt|AssertedParameterScope>>>|<row|<cell|\<ldots\>.>>>>>|\<Gamma\>\<vdash\>N:<math-tt|EagerFunctionDeclaration>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|EagerFunctionDeclaration>>>|<row|<cell|\<vdots\>>>|<row|<cell|b\<Longrightarrow\>\<Gamma\>.hasDirectEval>>>>>>>|<row|<cell|>>>>>
+    <tabular*|<tformat|<table|<row|<cell|<text|><dfrac|\<Gamma\>\<vdash\>N<around*|[|<math-tt|callee>|]>:<math-tt|Expression><space|1em>\<Gamma\>\<vdash\>N<around*|[|<math-tt|arguments>|]>:<math-tt|Arguments>|\<Gamma\>\<vdash\>N:<math-tt|CallExpression>><choice|<tformat|<cwith|4|4|1|1|cell-halign|c>|<cwith|6|6|1|1|cell-halign|c>|<table|<row|<cell|N.type=<math-tt|CallExpression>>>|<row|<cell|>>|<row|<cell|N<around*|[|<math-tt|callee>|]><rsub|.>type\<neq\><math-tt|IdentifierExpression>>>|<row|<cell|\<vee\>>>|<row|<cell|N<around*|[|<math-tt|callee>|]><around*|[|<math-tt|name>|]>\<neq\><text|\Peval\Q>>>|<row|<cell|\<vee\>>>|<row|<cell|\<Gamma\>.hasDirectEval>>>>>>>|<row|<cell|>>|<row|<cell|<dfrac|\<Gamma\>\<vdash\>N<around*|[|<math-tt|callee>|]>:<math-tt|IdentifierExpression><space|1em>\<Gamma\>\<vdash\>N<around*|[|<math-tt|arguments>|]>:<math-tt|Arguments>|\<Gamma\>\<vdash\>N:<math-tt|\<bot\>>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|CallExpression>>>|<row|<cell|N<around*|[|<math-tt|callee>|]><around*|[|<math-tt|name>|]>=<text|\Peval\Q>>>|<row|<cell|\<neg\>\<Gamma\>.hasDirectEval>>>>>>>|<row|<cell|>>|<row|<cell|>>|<row|<cell|>>|<row|<cell|<text|><dfrac||\<Gamma\>\<vdash\>N:<math-tt|AssertedParameterScope>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|AssertedParameterScope>>>|<row|<cell|N<around*|[|<math-tt|capturedNames>|]>\<subseteq\>N<around*|[|<math-tt|parameterNames>|]>>>|<row|<cell|\<Gamma\>.hasDirectEval=N<around*|[|<math-tt|hasDirectEval>|]>>>>>>>>|<row|<cell|>>|<row|<cell|>>|<row|<cell|<text|><dfrac|<stack|<tformat|<table|<row|<cell|\<Gamma\>\<oplus\><around*|(|hasDirectEval:b|)>\<vdash\>N<around*|[|<math-tt|body>|]>:<math-tt|FunctionBody>>>|<row|<cell|\<Gamma\>\<oplus\><around*|(|hasDirectEval:b|)>\<vdash\>N<around*|[|<math-tt|parameterscope>|]>:<math-tt|AssertedParameterScope>>>|<row|<cell|\<ldots\>.>>>>>|\<Gamma\>\<vdash\>N:<math-tt|EagerFunctionDeclaration>><choice|<tformat|<cwith|2|2|1|1|cell-halign|c>|<table|<row|<cell|N.type=<math-tt|EagerFunctionDeclaration>>>|<row|<cell|\<vdots\>>>|<row|<cell|b\<Longrightarrow\>\<Gamma\>.hasDirectEval>>>>>>>|<row|<cell|>>>>>
   </equation*>
 
   \;
 
-  \;
+  <section|Lazy parsing>
+
+  <math|>
+
+  <\equation*>
+    <stack|<tformat|<table|<row|<cell|<dfrac||<around*|\<llbracket\>|N|\<rrbracket\>><rsup|<with|color|red|\<Gamma\>>><rsub|ecmaify>=<with|font-series|bold|Thunk><around*|(|\<Gamma\>,N<rprime|'>|)>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|LazyFunctionDeclaration>>>|<row|<cell|N<around*|[|<math-tt|content>|]>=N<rprime|'>>>>>>>|<cell|>>|<row|<cell|>|<cell|>>|<row|<cell|>|<cell|>>|<row|<cell|>|<cell|>>|<row|<cell|<frac|\<Gamma\>\<vdash\>N:<math-tt|FunctionDeclaration><space|2em><around*|\<llbracket\>|N|\<rrbracket\>><rsup|\<Gamma\>><rsub|ecmaify>=E|\<Sigma\>\<triangleright\><with|font-series|bold|Thunk><around*|(|\<Gamma\>,N|)>\<longrightarrow\>\<Sigma\>\<triangleright\>E>>|<cell|>>|<row|<cell|>|<cell|>>|<row|<cell|<frac|\<Gamma\>\<vdash\>N:\<bot\>|\<Sigma\>\<triangleright\><with|font-series|bold|Thunk><around*|(|\<Gamma\>,N|)>\<longrightarrow\>\<Sigma\>\<triangleright\>\<bot\>>>|<cell|>>>>>
+  </equation*>
 </body>
 
 <\references>
@@ -41,6 +47,7 @@
     <associate|auto-2|<tuple|2|?>>
     <associate|auto-3|<tuple|3|?>>
     <associate|auto-4|<tuple|4|?>>
+    <associate|auto-5|<tuple|5|?>>
   </collection>
 </references>
 
