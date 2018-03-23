@@ -37,15 +37,7 @@ name: problem
 
 ---
 
-## Parsing + compiling is a bottleneck
-
-![JavaScript parsing + compiling is a bottleneck](img/parsing times.png)
-
-.small[Source: [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201), Google]
-
----
-
-## ...especially on mobile
+## Parsing is slow
 
 ![On mobile, things get up to 90x worse](img/mobile parsing times.jpeg)
 
@@ -117,11 +109,11 @@ Could we get JS startup close to Native startup without changing the semantics o
 ---
 name: lexing
 
-# II. The high cost of lexing
+# II. The high cost of parsing
 
 ---
 
-## The high cost of lexing
+## The high cost of parsing
 
 Lexing JavaScript is pretty ugly:
 
@@ -134,7 +126,7 @@ Lexing JavaScript is pretty ugly:
 
 ## Question 1.1
 
-Could we speed parsing by using better tokens?
+Could we speed parsing by using a better syntax?
 
 ---
 
@@ -176,16 +168,6 @@ within our requirements?
 - Specify fine-grained language upgrade mechanism.
 - Adopt AST nodes that roughly match text parsing rules.
 
----
-
-Let's encode
-
-```js
-function foo(x) {
-    ...
-}
-```
-
 
 ---
 
@@ -212,6 +194,16 @@ interface EagerFunctionDeclaration {
 ## Ecmaify
 
 ![Converting AST to JS text source](img/ecmaify.png)
+
+---
+
+Let's encode
+
+```js
+function foo(x) {
+    ...
+}
+```
 
 ---
 
@@ -257,12 +249,6 @@ EagerFunctionDeclaration:
 
 ---
 
-## Binify
-
-![Converting AST to binary](img/binify.png)
-
----
-
 ## Mid-level: Per-node versioning
 
 ```js
@@ -297,10 +283,6 @@ EagerFunctionDeclaration:
 4. Bytecode compile partial AST.
 5. Start interpreter.
 
----
-
-That's just the beginning.
-
 
 ---
 name: analyzing
@@ -320,7 +302,6 @@ Can we do it with text JavaScript source?
 
 ## Interlude - the evils of eval (1)
 
-Compare
 
 ```js
 (function() {
@@ -355,18 +336,6 @@ Compare
 
 ---
 
-## The true cost of analyzing
-
-Before JS can bytecode-compile a function node
-or a block, it needs critical information:
-
-- everything above the node in the AST;
-- presence of direct calls to `eval` in subnodes;
-- variables captured by nested functions;
-- ...
-
----
-
 ## Experiment 2.1 - Result
 
 > Streaming compilers can amortize the cost of compilation to *O(1 + 𝜀)*
@@ -374,7 +343,10 @@ or a block, it needs critical information:
 >
 > Can we do it with text JavaScript source?
 
-⇒ No: information needed to compile the first byte may appear anywhere in the file.
+⇒ No: information needed to compile the first byte may appear anywhere in the file:
+
+- `eval`;
+- captured variables.
 
 ---
 
@@ -408,9 +380,8 @@ interface EagerFunctionDeclaration {
   attribute boolean isAsync;
   attribute boolean isGenerator;
 
-  // (Informal) proof (function parameters)
+  // (Informal) proof obligations
   attribute AssertedParameterScope? parameterScope;
-  // (Informal) proof (function body)
   attribute AssertedVarScope? bodyScope;
 
   attribute BindingIdentifier name;
@@ -428,10 +399,10 @@ interface AssertedParameterScope {
   // Names of function parameters.
   attribute IdentifierName[] parameterNames;
 
-  // Name of function parameters captured by nested functions.
+  // Names captured by inner functions.
   attribute IdentifierName[] capturedNames;
 
-  // Presence of syntactic `eval(...)` in a descendent node.
+  // Presence/absence of syntactic `eval(...)`.
   attribute boolean hasDirectEval;
 };
 ```
@@ -446,12 +417,7 @@ interface AssertedParameterScope {
 
 ## Language specifications
 
-During **compilation**, if `parameterNames`, `capturedNames`
-or `hasDirectEval` was proven false, throw `SyntaxError`.
-
---
-
-aka "If the proof is false, reject it before running."
+During **compilation**, throw `SyntaxError` if the proof obligation is disproven.
 
 ---
 
@@ -520,20 +486,6 @@ First-parse duration effect:
 
 ⇒ Experiment conclusive. Let's go lazy parsing!
 
----
-
-## Experiment 3.2
-
-Can we perform lazy parsing on text source?
-
----
-
-## Experiment 3.2 - Result
-
-Can we perform lazy parsing on text source?
-
-- No: forbidden by JS specifications.
-- No: the parser needs to parse entire functions to find out where they end.
 
 ---
 
@@ -565,17 +517,6 @@ typedef (EagerFunctionDeclaration
 };
 ```
 
----
-
-## Language specification
-
-New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skippable]` node.
-
---
-
-- Only affects new programs (opt-in).
-- Only affects ill-formed programs.
-- The encoder and browser may agree to skip parsing a function.
 
 
 ---
@@ -633,18 +574,6 @@ name: fetching
 
 ---
 
-## Experiment 4.1
-
-Streaming **interpreters** can amortize the cost of **fetching + decompressing + compiling** to *O(1 + 𝜀)*.
-
-Can we do it with JavaScript text source?
-
---
-
-Clearly, no.
-
----
-
 ## Experiment 4.2 (WIP)
 
 Streaming **interpreters** can amortize the cost of **fetching + decompressing + compiling** to *O(1 + 𝜀)*.
@@ -656,11 +585,6 @@ Can we modify our Binary AST to make it possible?
 ## Strategy
 
 - Code we need now should appear before code we don't need yet.
-
---
-
-- This transformation exists on native executables.
-- Gains witnessed on Firefox executable: *0.9 from I/O reduction. Source: [Mike Hommey](https://glandium.org/blog/?p=1296) (Mozilla).
 
 
 ---
@@ -776,8 +700,17 @@ Also:
 Slides available at https://tinyurl.com/DT-FBR-2018 .
 
 ---
+name: bonus
 
-# Bonus slides!
+#Bonus slides
+
+- [About me](#about)
+- [Duration of Parsing + Compilation](#bonus_durations)
+- [Converting AST to binary](#bonus_binify)
+- [Holy JIT](holyjit.html)
+- [Could we lazy parse text source?](#bonus_lazy_text_parsing)
+- [DelayedSyntaxError](#bonus_delayed_syntax_error)
+- [Reordering native executables](#bonus_reordering_native_executables)
 
 ---
 name: about
@@ -830,7 +763,7 @@ name: about
 
 name: zoom_opalang
 
-## 2009-2011: Opalang
+## 2008-2011: Opalang
 
 .center[.half[![Multi-tiered programming language for a "sane, safe, secure" web](img/opalang.png)]]
 
@@ -853,7 +786,7 @@ name: zoom_thinkerbell
 
 ## 2016: Thinkerbell
 
-.center[.half[![Domain-Specific Language for the Smart Home](img/thinkerbell.png)]]
+.center[.half[![Domain-Specific Language for the Smart Home](img/thinkerbell 2.png)]]
 
 ---
 
@@ -871,10 +804,50 @@ name: zoom_holyjit
 
 ---
 
-.center[[2017-?: JS Binary AST](talk.html#toc)]
+.center[[2017-?: JS Binary AST](#toc)]
 
 ---
 
-#More bonus slides
+name: bonus_binify
+## Binify
 
-- [Holy JIT](holyjit.html)
+![Converting AST to binary](img/binify.png)
+
+---
+
+name: bonus_durations
+
+![Durations of parsing + compiling](img/parsing times.png)
+
+
+---
+name: bonus_lazy_text_parsing
+
+## Experiment 3.2
+
+> Can we perform lazy parsing on text source?
+
+- No: forbidden by JS specifications.
+- No: the parser needs to parse entire functions to find out where they end.
+- No: we need to analyze the entire text.
+
+---
+name: bonus_delayed_syntax_error
+
+## Language specification
+
+New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skippable]` node.
+
+--
+
+- Only affects new programs (opt-in).
+- Only affects ill-formed programs.
+- The encoder and browser may agree to skip parsing a function.
+
+---
+name: bonus_reordering_native_executables
+
+## Reordering native executables
+
+- This transformation exists on native executables.
+- Gains witnessed on Firefox executable: *0.9 from I/O reduction. Source: [Mike Hommey](https://glandium.org/blog/?p=1296) (Mozilla).
