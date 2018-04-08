@@ -41,6 +41,8 @@ name: bonus_durations
 
 ![Durations of parsing + compiling](img/parsing times.png)
 
+.small[Source: [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201), Google]
+
 ---
 
 ## Parsing is slow
@@ -126,7 +128,7 @@ Lexing JavaScript is pretty ugly:
 - is `for` an identifier or a keyword?
 - is `/` an operator, a regexp or a comment?
 - is `"use string"` a string or a directive?
-- is ` ` a `;`?
+- is `_` a `;`?
 - ...
 
 ---
@@ -238,8 +240,8 @@ EagerFunctionDeclaration:
 
 ```js
 [grammar]
-  /* 0 */ EagerFunctionDeclaration [ "isAsync" ... ]
-  /* 1 */ BindingIdentifier [ "name" ]
+  /* 0 */ EagerFunctionDeclaration /* isAsync, ... */
+  /* 1 */ BindingIdentifier /* name */
   ...
 [strings]
   /* 0 */ "foo"
@@ -260,16 +262,13 @@ EagerFunctionDeclaration:
 
 ```js
 [grammar]
-  /* 0 */ EagerFunctionDeclaration [
-      "isAsync",
-      "isGenerator",
-      ...
-    ]
-  /* 42 */ EagerFunctionDeclaration2021 [
-      "typevars",
-      "logicalvars",
-      ...
-    ]
+  /* 0 */ EagerFunctionDeclaration
+      // attribute boolean isAsync
+      // attribute boolean isGenerator
+  ...
+  /* 42 */ EagerFunctionDeclaration2021
+      // attribute TypeVars typeVars
+      // attribute LogicalVars logicalVars
 ```
 
 ---
@@ -474,7 +473,7 @@ Would lazier parsing make things faster?
 
 1. Evaluate first-parse time saved by Syntax Parsing.
 2. Tweak unsafe binary parser to skip nested/all functions.
-3. Evaluate time spent reifying thunks.
+3. Evaluate time spent thunkifying.
 4. Compare speed (Facebook Chat, Firefox Devtools).
 
 ---
@@ -487,7 +486,7 @@ First-parse duration effect:
 - Syntax Binary Parsing vs. Bin Parsing: * 0.8;
 - Bin Parsing (skip nested) vs . Bin Parsing: * 0.45;
 - Bin Parsing (skip functions) vs. Bin Parsing: * 0.25;
-- Time spent reifying thunks: 𝜀.
+- Time spent thunkifying: 𝜀.
 
 --
 
@@ -549,9 +548,9 @@ New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skipp
 
 ```js
 [grammar]
-  /* 0 */ EagerFunctionDeclaration [ "isAsync" ... ]
-  /* 1 */ BindingIdentifier [ "name" ]
-  /* 2 */ SkippableFunctionDeclaration [ "contents" ] // ☜
+  /* 0 */ EagerFunctionDeclaration /* isAsync ... */
+  /* 1 */ BindingIdentifier /* name */
+  /* 2 */ SkippableFunctionDeclaration /* contents */
   ...
 [strings]
   /* 0 */ "foo"
@@ -622,15 +621,15 @@ name: bonus_reordering_native_executables
 ```js
 ...
 [grammar]
-  /* 0 */ SkippableFunctionDeclaration [ "contents" ]
+  /* 0 */ SkippableFunctionDeclaration /* contents */
   ...
 [ast]
   /* SkippableFunctionDeclaration */ 0
     /* index in [ast] */ 314     // ☜
   ...
 [grammar]
-  /* 42 */ EagerFunctionDeclaration [ "isAsync" ... ]
-  /* 43 */ BindingIdentifier [ "name" ]
+  /* 42 */ EagerFunctionDeclaration /* isAsync */
+  /* 43 */ BindingIdentifier /* name */
 [ast]
   /* 314 */ /* contents: EagerFunctionDeclaration */ 42
     /* isAsync: false */ 0
