@@ -14,7 +14,7 @@ name: toc
 # Table of contents
 
 1. [Problem statement](#problem)
-2. [The high cost of lexing](#lexing)
+2. [The high cost of syntax](#lexing)
 3. [The true cost of analyzing](#analyzing)
 4. [The unnecessary cost of parsing](#parsing)
 5. [The avoidable cost of fetching](#fetching)
@@ -34,6 +34,12 @@ name: problem
 --
 
 - "Apps became interactive in **8 seconds** on desktop (using cable) and **16 seconds** on mobile (Moto G4 over 3G)"(median value, source: [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201), Google)
+
+---
+
+name: bonus_durations
+
+![Durations of parsing + compiling](img/parsing times.png)
 
 ---
 
@@ -109,17 +115,18 @@ Could we get JS startup close to Native startup without changing the semantics o
 ---
 name: lexing
 
-# II. The high cost of parsing
+# II. The high cost of syntax
 
 ---
 
-## The high cost of parsing
+## The high cost of syntax
 
 Lexing JavaScript is pretty ugly:
 
 - is `for` an identifier or a keyword?
 - is `/` an operator, a regexp or a comment?
 - is `"use string"` a string or a directive?
+- is ` ` a `;`?
 - ...
 
 ---
@@ -524,6 +531,19 @@ typedef (EagerFunctionDeclaration
 ![Altered semantics](img/lazy-parsing.png)
 
 ---
+name: bonus_delayed_syntax_error
+
+## Language specification
+
+New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skippable]` node.
+
+--
+
+- Only affects new programs (opt-in).
+- Only affects ill-formed programs.
+- The encoder and browser may agree to skip parsing a function.
+
+---
 
 ## Low-level: Binary tokens
 
@@ -545,6 +565,7 @@ typedef (EagerFunctionDeclaration
       ...
     ...
 ```
+
 
 ---
 
@@ -586,6 +607,13 @@ Can we modify our Binary AST to make it possible?
 
 - Code we need now should appear before code we don't need yet.
 
+---
+name: bonus_reordering_native_executables
+
+## Reordering native executables
+
+- This transformation exists on native executables.
+- Gains witnessed on Firefox executable: *0.9 from I/O reduction. Source: [Mike Hommey](https://glandium.org/blog/?p=1296) (Mozilla).
 
 ---
 
@@ -594,17 +622,17 @@ Can we modify our Binary AST to make it possible?
 ```js
 ...
 [grammar]
-  /* 0 */ EagerFunctionDeclaration [ "isAsync" ... ]
-  /* 1 */ BindingIdentifier [ "name" ]
-  /* 2 */ SkippableFunctionDeclaration [ "contents" ]
+  /* 0 */ SkippableFunctionDeclaration [ "contents" ]
   ...
 [ast]
-  // At offset 0, toplevel
-  /* SkippableFunctionDeclaration */ 2
-    /* declaration offset */ 32768     // ☜
+  /* SkippableFunctionDeclaration */ 0
+    /* index in [ast] */ 314     // ☜
   ...
-  // At offset 32768
-  /* contents: EagerFunctionDeclaration */ 0
+[grammar]
+  /* 42 */ EagerFunctionDeclaration [ "isAsync" ... ]
+  /* 43 */ BindingIdentifier [ "name" ]
+[ast]
+  /* 314 */ /* contents: EagerFunctionDeclaration */ 42
     /* isAsync: false */ 0
     /* isGenerator: false */ 0
     ...
@@ -727,6 +755,14 @@ name: about
 
 ---
 
+## Type systems
+- [Resource reuse for π-calculus](https://www.researchgate.net/publication/228514964_Resources_garbage-collection_and_the_pi-calculus), [Erlang](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.636.2562) (solo)
+- [Effects for syscall analysis](https://dutherenverseauborddelatable.wordpress.com/2008/06/03/extrapol-part-1-from-c-to-effects/) (lead)
+- [Distributed privacy](https://github.com/MLstate/opalang) (lead + mentor)
+- [SmartHome physical safety](https://yoric.github.io/post/thinkerbell-postmortem/) (lead)
+
+---
+
 ## From Libraries to Operating Systems
 
 - [OCaml, Batteries Included](https://github.com/ocaml-batteries-team/batteries-included) (lead + mentor)
@@ -736,6 +772,18 @@ name: about
 - [Data safety](https://dutherenverseauborddelatable.wordpress.com/2014/06/26/firefox-the-browser-that-has-your-backup/) (lead + mentor)
 - [Project Link](https://github.com/fxbox/foxbox) (lead)
 - [Redox OS](https://www.redox-os.org) (contributor)
+
+---
+
+name: zoom_shutdown
+
+## 2014: Async Shutdown
+
+Shutdown primitives for hundreds of fibers/threads/processes with dynamic dependencies.
+
+.center[.half[![A tiny subset of shutdown dependencies](img/async shutdown.png)]]
+
+**Possible future work** Formal semantics of concurrent destructors.
 
 ---
 
@@ -752,33 +800,11 @@ name: about
 
 ---
 
-## Type systems
-- [Resource reuse for π-calculus](https://www.researchgate.net/publication/228514964_Resources_garbage-collection_and_the_pi-calculus), [Erlang](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.636.2562) (solo)
-- [Effects for syscall analysis](https://dutherenverseauborddelatable.wordpress.com/2008/06/03/extrapol-part-1-from-c-to-effects/) (lead)
-- [Distributed privacy](https://github.com/MLstate/opalang) (lead + mentor)
-- [SmartHome physical safety](https://yoric.github.io/post/thinkerbell-postmortem/) (lead)
-
-
----
-
 name: zoom_opalang
 
 ## 2008-2011: Opalang
 
 .center[.half[![Multi-tiered programming language for a "sane, safe, secure" web](img/opalang.png)]]
-
-
----
-
-name: zoom_shutdown
-
-## 2014: Async Shutdown
-
-Shutdown primitives for hundreds of fibers/threads/processes with dynamic dependencies.
-
-.center[.half[![A tiny subset of shutdown dependencies](img/async shutdown.png)]]
-
-**Possible future work** Formal semantics of concurrent destructors.
 
 ---
 
@@ -813,11 +839,6 @@ name: bonus_binify
 
 ![Converting AST to binary](img/binify.png)
 
----
-
-name: bonus_durations
-
-![Durations of parsing + compiling](img/parsing times.png)
 
 
 ---
@@ -831,23 +852,4 @@ name: bonus_lazy_text_parsing
 - No: the parser needs to parse entire functions to find out where they end.
 - No: we need to analyze the entire text.
 
----
-name: bonus_delayed_syntax_error
 
-## Language specification
-
-New exception: `DelayedSyntaxError`. May be thrown while **executing** a `[Skippable]` node.
-
---
-
-- Only affects new programs (opt-in).
-- Only affects ill-formed programs.
-- The encoder and browser may agree to skip parsing a function.
-
----
-name: bonus_reordering_native_executables
-
-## Reordering native executables
-
-- This transformation exists on native executables.
-- Gains witnessed on Firefox executable: *0.9 from I/O reduction. Source: [Mike Hommey](https://glandium.org/blog/?p=1296) (Mozilla).
