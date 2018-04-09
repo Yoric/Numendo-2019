@@ -21,7 +21,7 @@
   <section|Valid AST (before Asserted Scope)>
 
   <\equation*>
-    <tabular*|<tformat|<table|<row|<cell|<text|><dfrac|\<Gamma\>\<oplus\><around*|(|<math-ss|label>:l|)>\<vdash\>N<rsub|body>:<math-tt|Statement>|\<Gamma\>\<vdash\>N:<math-tt|LabelledStatement>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|LabelledStatement>>>|<row|<cell|N<around*|[|<math-tt|body>|]>=N<rsub|body>>>|<row|<cell|N<around*|[|<math-tt|label>|]>=l>>|<row|<cell|l\<neq\>\<epsilon\>>>>>>>>|<row|<cell|<text|><dfrac||\<Gamma\>\<vdash\>N:<math-tt|BreakStatement>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|BreakStatement>>>|<row|<cell|N<around*|[|<math-tt|label>|]>=l>>|<row|<cell|l=\<epsilon\>\<vee\>l\<in\>\<Gamma\>.label>>>>>>>|<row|<cell|<dfrac||\<Gamma\>\<vdash\>N:<math-tt|\<bot\>>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|BreakStatement>>>|<row|<cell|N<around*|[|<math-tt|label>|]>=l>>|<row|<cell|l=\<epsilon\>\<wedge\>l\<notin\>\<Gamma\>.label>>>>>>>>>>
+    <tabular*|<tformat|<table|<row|<cell|<text|><dfrac|\<Gamma\>\<oplus\><around*|(|<math-ss|label>:l|)>\<vdash\>N<rsub|body>:<math-tt|Statement>|\<Gamma\>\<vdash\>N:<math-tt|LabelledStatement>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|LabelledStatement>>>|<row|<cell|N<around*|[|<math-tt|body>|]>=N<rsub|body>>>|<row|<cell|N<around*|[|<math-tt|label>|]>=l>>|<row|<cell|l\<neq\>\<epsilon\>>>|<row|<cell|l\<in\>ValidLabels>>>>>>>|<row|<cell|<text|><dfrac||\<Gamma\>\<vdash\>N:<math-tt|BreakStatement>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|BreakStatement>>>|<row|<cell|N<around*|[|<math-tt|label>|]>=l>>|<row|<cell|l=\<epsilon\>\<vee\>l\<in\>\<Gamma\>.label>>>>>>>|<row|<cell|<dfrac||\<Gamma\>\<vdash\>N:<math-tt|\<bot\>>><choice|<tformat|<table|<row|<cell|N.type=<math-tt|BreakStatement>>>|<row|<cell|N<around*|[|<math-tt|label>|]>=l>>|<row|<cell|l=\<epsilon\>\<wedge\>l\<notin\>\<Gamma\>.label>>>>>>>>>>
   </equation*>
 
   <section|Validate AST during Bytecode Compilation (with Asserted Scope)>
@@ -43,7 +43,16 @@
   \;
 
   \;
+
+  \;
+
+  \;
+
+  \;
 </body>
+
+<initial|<\collection>
+</collection>>
 
 <\references>
   <\collection>
@@ -70,9 +79,14 @@
       AST (before Asserted Scope)> <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
       <no-break><pageref|auto-3><vspace|0.5fn>
 
-      <vspace*|1fn><with|font-series|<quote|bold>|math-font-series|<quote|bold>|4<space|2spc>Bytecode
-      Compilation (with Asserted Scope)> <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <vspace*|1fn><with|font-series|<quote|bold>|math-font-series|<quote|bold>|4<space|2spc>Validate
+      AST during Bytecode Compilation (with Asserted Scope)>
+      <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
       <no-break><pageref|auto-4><vspace|0.5fn>
+
+      <vspace*|1fn><with|font-series|<quote|bold>|math-font-series|<quote|bold>|5<space|2spc>Lazy
+      parsing> <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <no-break><pageref|auto-5><vspace|0.5fn>
     </associate>
   </collection>
 </auxiliary>

@@ -652,14 +652,13 @@ name: bonus_reordering_native_executables
 
 ---
 
-# JavaScript, ca. 2021?
+# JavaScript startup, ca. 2021?
 
 1. **O(1 + 𝜀)** Full fetch + decompress.
 2. **Removed** Transcode to UTF-8.
 3. **Fast, lazy O(1 + 𝜀)** Parse, verify, AST build.
 4. **O(1 + 𝜀)** Bytecode compile partial AST.
 5. Start interpreter.
-
 
 ---
 name: conclusions
@@ -672,7 +671,7 @@ name: conclusions
 
 ## What we have
 
-- Clear roadmap from bottleneck towards fast *O(1 + 𝜀)* JS startup.
+- Clear roadmap from javascript-as-bottleneck towards fast *O(1 + 𝜀)* JS startup.
 
 --
 
@@ -680,9 +679,6 @@ Also:
 
 - Planet-friendly.
 - Near transparent migration strategy.
-
---
-
 - Ideas should work with other languages.
 
 ---
@@ -691,7 +687,7 @@ Also:
 
 - [JS AST](https://binast.github.io/ecmascript-binary-ast/#binast-tree-grammar) (*)
 - [AST ⇒ original semantics](https://binast.github.io/ecmascript-binary-ast/#binast-transformation) (*)
-- EcmaScript Proposal (TC39 stage 1).
+- EcmaScript Proposal (TC39 stage 1 ⇒ 2).
 - Partial formal semantics.
 
 (*) With Shu-yu Guo (Bloomberg).
@@ -709,16 +705,11 @@ Also:
 
 ## Next steps
 
-- Reference implementation
-    - Compression.
-    - Finish ongoing experiments.
-- Real-world data
-    - Finish SpiderMonkey implementation.
-    - Real-world tests with partners.
-- Language
-    - Make it a standard (TC39 stage 2).
-    - Get it adopted by all VMs.
-    - Finish formal semantics (JSCert / KJS?).
+- Compression.
+- Finish all implementations.
+- Real-world tests with partners.
+- Make it a standard.
+- Finish formal semantics (JSCert?, KJS?).
 
 ---
 
