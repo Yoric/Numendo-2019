@@ -1848,7 +1848,7 @@ max-height: 80%;
 </section>
 <section class="slide level1">
 
-<p>##… and</p>
+<h2 id="and">… and</h2>
 <ul>
 <li>Start <em>compiling</em> <code>init</code> before <code>later</code> is received.</li>
 <li>Start <em>running</em> <code>init</code> before <code>later</code> is received.</li>
@@ -1863,6 +1863,15 @@ max-height: 80%;
 <li>Time spent compiling: ~background task (*).</li>
 </ul>
 <p>(*) Simulations.</p>
+</section>
+<section id="how-to-use-it" class="slide level1">
+<h1>How to use it (*)</h1>
+<ol type="1">
+<li>Replace <code>uglify</code> with <code>binjs_encode</code>.</li>
+<li>Replace <code>text/javascript</code> with <code>application/javascript-binast</code>.</li>
+<li>It works.</li>
+</ol>
+<p>(*) Early preview.</p>
 </section>
 <section id="conclusions" class="slide level1">
 <h1>Conclusions</h1>

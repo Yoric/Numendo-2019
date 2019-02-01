@@ -204,7 +204,7 @@ function later() {
 
 ---
 
-##... and
+## ... and
 
 - Start *compiling* `init` before `later` is received.
 - Start *running* `init` before `later` is received.
@@ -221,6 +221,15 @@ function later() {
 
 ---
 
+# How to use it (*)
+
+1. Replace `uglify` with `binjs_encode`.
+2. Replace `text/javascript` with `application/javascript-binast`.
+3. It works.
+
+(*) Early preview.
+
+---
 
 # Conclusions
 
