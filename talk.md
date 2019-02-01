@@ -10,6 +10,15 @@ David Teller (Yoric), Mozilla
 
 ---
 
+Joint work:
+
+- Mozilla (SpiderMonkey team + contributors)
+- Facebook (WebPerf team)
+- Bloomberg
+- CloudFlare
+
+---
+
 ## Web application performance matters
 
 - "53% of visits are abandoned if a mobile site takes more than **3 seconds** to load" (source: [DoubleClick](https://docs.google.com/viewerng/viewer?url=https://storage.googleapis.com/doubleclick-prod/documents/The_Need_for_Mobile_Speed_-_FINAL.pdf))
