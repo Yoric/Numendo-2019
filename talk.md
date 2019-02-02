@@ -1,6 +1,6 @@
-% The JavaScript Binary AST
+% BinAST
 
-# The JavaScript Binary AST
+# BinAST
 
 or
 
@@ -8,11 +8,12 @@ or
 
 David Teller (Yoric), Mozilla
 
+
 ---
 
 Joint work:
 
-- Mozilla (SpiderMonkey team + contributors)
+- Mozilla (SpiderMonkey team, community)
 - Facebook (WebPerf team)
 - Bloomberg
 - CloudFlare
@@ -43,41 +44,39 @@ Joint work:
 
 ---
 
-## JS startup pipeline
-
-1. Full fetch + decompress.
-2. Transcode to UTF-8.
-3. Full tokenize + parse + verify
-4. Partial AST build.
-5. Bytecode compile partial AST.
-6. Start interpreter.
+# How JavaScript works
 
 ---
 
-## Optimizing (as a webdev)
+## JS startup pipeline
 
-1. Full fetch + decompress. – Minify + compress.
-2. Transcode to UTF-8. – Serve as UTF-8.
-3. Full tokenize + parse + verify – ?
-4. Partial AST build – IIFE
-5. Bytecode compile partial AST – ?
-6. Start interpreter – ?
+![](img/pipes.jpg)
+
+---
+
+## JS startup pipeline
+
+![](img/pipeline 1.png)
+
+---
+
+## + Optimizations
+
+![](img/pipeline 2.png)
 
 ---
 
 ## Contrast with ~native
 
-0. Pre-compile.
-1. Lazy fetch.
-2. No transcode.
-3. No/minimal/lazy parse.
-4. No/lazy dynamic compile.
-5. Start interpreter.
+![](img/dotnet.png)
+
 
 ---
 
-## Let's try this
-### Without modifying the language!
+# Hello, BAST
+
+![](img/bast.png)
+
 
 ---
 
@@ -144,6 +143,9 @@ Beyond minification
 const log = require('my-logger')('my-module');
 const {parse, print} = require('my-parser');
 // ...
+if (Constants.DEBUG) {
+  // ...
+}
 ```
 
 ---
@@ -176,11 +178,11 @@ const {parse, print} = require('my-parser');
 ## Instead of this
 
 ```js
-function init() {
-  // Used during startup
-}
 function later() {
   // Not used during startup
+}
+function init() {
+  // Used during startup
 }
 ```
 
@@ -206,6 +208,7 @@ function later() {
 
 ## ... and
 
+- Start *parsing* `init` before `later` is received.
 - Start *compiling* `init` before `later` is received.
 - Start *running* `init` before `later` is received.
 - So yeah, we're working on *streaming* JavaScript.
@@ -219,15 +222,6 @@ function later() {
 
 (*) Simulations.
 
----
-
-# How to use it (*)
-
-1. Replace `uglify` with `binjs_encode`.
-2. Replace `text/javascript` with `application/javascript-binast`.
-3. It works.
-
-(*) Early preview.
 
 ---
 
@@ -235,12 +229,28 @@ function later() {
 
 ---
 
-- JavaScript startup is a bottleneck.
-- But it doesn't need to be!
-- Reduce the amount of work at every step.
-- Improvements in progress.
-- Experiments in progress.
+![](img/pipeline 3.png)
 
 ---
 
-# Soon on a browser / Node near you? :)
+# How we test it! (*)
+
+1. Replace `uglify` with `binjs_encode`.
+2. Replace `text/javascript` with `application/javascript-binast`.
+3. Done.
+
+(*) Not ready for prime-time.
+
+---
+
+- JavaScript startup is a bottleneck.
+- But it doesn't need to be!
+- Reduce the amount of work at every step.
+- Save time and energy!
+- Improvements in progress.
+- Experiments in progress.
+- No programming language harmed!
+
+---
+
+# Soon on a browser / server near you? :)
