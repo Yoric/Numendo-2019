@@ -1,6 +1,6 @@
 % BinAST
 %or
-%**How fast can JavaScript start?**
+%**Breaking the JavaScript startup bottleneck**
 
 ---
 
