@@ -1,15 +1,10 @@
 % BinAST
-
-# BinAST
-
-or
-
-**How fast can JavaScript start?**
-
-David Teller (Yoric), Mozilla
-
+%or
+%**How fast can JavaScript start?**
 
 ---
+
+David Teller (Yoric), Mozilla, Tech Lead
 
 Joint work:
 
@@ -33,8 +28,15 @@ Joint work:
 
 ## What's the problem?
 
+:::incremental
+
+- Code.
 - Lots of code.
-- Code slows you down, even when you don't execute it.
+- How much code do *you* have?
+- Code slows you down.
+- ...even when you don't execute it.
+
+:::
 
 ---
 
@@ -44,7 +46,7 @@ Joint work:
 
 ---
 
-# How JavaScript works
+# How JavaScript starts
 
 ---
 
@@ -118,10 +120,10 @@ function foo(x) {
 Names:
   - ["foo", ...]
 
-FunctionDeclaration:
-  name: 0
-  eval: false
-  body:
+FunctionDeclaration: // 42
+  name: 0            // 0
+  eval: false        // 0
+  body:              // ...
     ...
 ```
 
@@ -156,6 +158,8 @@ if (Constants.DEBUG) {
 
 ---
 
+## So, let's learn
+
 - String, identifier, properties dictionary.
 - Code pattern dictionary.
 - => ~1.2 bits/code construction.
@@ -165,7 +169,7 @@ if (Constants.DEBUG) {
 
 ## Results
 
-- With a good dictionary, ~size parity with minification + brotli.
+- With a good dictionary, ~minification + brotli.
 - *Without minification*
 - Further optimizations coming :)
 
@@ -206,19 +210,20 @@ function later() {
 
 ---
 
-## ... and
+:::incremental
 
-- Start *parsing* `init` before `later` is received.
-- Start *compiling* `init` before `later` is received.
-- Start *running* `init` before `later` is received.
+- ...only {parse, compile} what you execute.
+- ...{parse, compile, execute} as you receive.
 - So yeah, we're working on *streaming* JavaScript.
+
+:::
 
 ---
 
 ## Results (lab)
 
 - Time spent parsing: -75% (*).
-- Time spent compiling: ~background task (*).
+- Compiling: ~background task (*).
 
 (*) Simulations.
 
@@ -233,23 +238,19 @@ function later() {
 
 ---
 
-# How we test it! (*)
-
-1. Replace `uglify` with `binjs_encode`.
-2. Replace `text/javascript` with `application/javascript-binast`.
-3. Done.
-
-(*) Not ready for prime-time.
+- We can fix JavaScript startup.
+- No coding required.
+- No language harmed.
+- Reduce total work (energy?)
 
 ---
 
-- JavaScript startup is a bottleneck.
-- But it doesn't need to be!
-- Reduce the amount of work at every step.
-- Save time and energy!
-- Improvements in progress.
-- Experiments in progress.
-- No programming language harmed!
+## Where's the code?
+
+- Still a WIP.
+- https://github.com/binast
+- Firefox Nightly (hidden preview)
+- Slides: https://yoric.github.io/Fosdem-2019
 
 ---
 
