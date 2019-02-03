@@ -266,6 +266,7 @@ function later() {
 - https://github.com/binast
 - Firefox Nightly (hidden preview)
 - Slides: https://yoric.github.io/Fosdem-2019
+- Contributions welcome!
 
 ---
 
