@@ -75,6 +75,21 @@ Joint work:
 
 ---
 
+
+# Introducing BinAST
+
+- JavaScript
+- **Bin**ary
+- **A**bstract
+- **S**yntax
+- **T**ree
+
+---
+
+Don't panic.
+
+---
+
 # Hello, BAST
 
 ![](img/bast.png)

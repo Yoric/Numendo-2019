@@ -8,6 +8,7 @@
     border: inset;
 }
 
-.reveal img {
+.reveal section img {
     border: none;
+    background: none;
 }
