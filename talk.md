@@ -185,7 +185,7 @@ if (Constants.DEBUG) {
 ## Results
 
 - With a good dictionary, ~minification + brotli.
-- *Without minification*
+- *Without minification.*
 - Further optimizations coming :)
 
 ---
@@ -240,7 +240,7 @@ function later() {
 - Time spent parsing: -75% (*).
 - Compiling: ~background task (*).
 
-(*) Simulations.
+(*) To be confirmed.
 
 
 ---
