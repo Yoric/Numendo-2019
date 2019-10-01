@@ -1,40 +1,43 @@
 % BinAST
 %or
-%**Breaking the JavaScript startup bottleneck**
+%**Brisons le mur du chargement JS !**
 
 ---
 
 David Teller (Yoric), Mozilla, Tech Lead
 
-Joint work:
+Un projet
 
-- Mozilla (SpiderMonkey team, community)
-- Facebook (WebPerf team)
+- Mozilla
+- Facebook
 - Bloomberg
 - CloudFlare
 
 ---
 
-## Web application performance matters
-
-- "53% of visits are abandoned if a mobile site takes more than **3 seconds** to load" (source: [DoubleClick](https://docs.google.com/viewerng/viewer?url=https://storage.googleapis.com/doubleclick-prod/documents/The_Need_for_Mobile_Speed_-_FINAL.pdf))
-
---
-
-- "Apps became interactive in **8 seconds** on desktop (using cable) and **16 seconds** on mobile (Moto G4 over 3G)"(median value, source: [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201), Google)
-
-
----
-
-## What's the problem?
+## Sur le web, la vitesse compte
 
 :::incremental
 
-- Code.
-- Lots of code.
-- How much code do *you* have?
-- Code slows you down.
-- ...even when you don't execute it.
+- [DoubleClick](https://storage.googleapis.com/doubleclick-prod/documents/The_Need_for_Mobile_Speed_-_FINAL.pdf) : sur mobile, si le chargmenet dure **3+ secondes**, 53% des visites sont abandonnées
+- [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201) : en médiane, le TTI dure **8 secondes** sur fixe, **16 secondes** sur mobile
+:::
+
+---
+
+![](img/slow.png)
+
+---
+
+## Quel est le problème?
+
+:::incremental
+
+- Du code.
+- Beaucoup de code.
+- Et vous, vous avez combien de code ?
+- Le code vous ralentit.
+- ... même si vous ne l'utilisez pas !
 
 :::
 
@@ -46,29 +49,28 @@ Joint work:
 
 ---
 
-# How JavaScript starts
+# Comment JavaScript démarre
 
 ---
 
-## JS startup pipeline
+## On met du code...
 
 ![](img/pipes.jpg)
 
 ---
 
-## JS startup pipeline
 
 ![](img/pipeline 1.png)
 
 ---
 
-## + Optimizations
+## En optimisant...
 
 ![](img/pipeline 2.png)
 
 ---
 
-## Contrast with ~native
+## Et le code natif ?
 
 ![](img/dotnet.png)
 
@@ -76,7 +78,7 @@ Joint work:
 ---
 
 
-# Introducing BinAST
+# Parlons de BinAST
 
 - JavaScript
 - **Bin**ary
@@ -86,50 +88,49 @@ Joint work:
 
 ---
 
-Don't panic.
+Pas de panique !
 
 ---
-
-# Hello, BAST
 
 ![](img/bast.png)
 
 
 ---
 
-# Fixing parsing
-Beyond IIFE
+# Parsons plus vite
+
+Au-delà de IIFE
 
 ---
 
-## Parsing is slow, because
+## Le parseur est lent...
 
-- Tokens are complicated.
-- Strings are complicated.
+- Les Tokens, c'est compliqué.
+- Les Chaînes de caractères, c'est compliqué.
+- Les clôtures, c'est compliqué.
 - `eval`.
 - `SyntaxError`.
-- Closures.
 
 ---
 
-## So...
+## Du coup...
 
-- Simplify tokens, strings.
-- Pre-process `eval`, `SyntaxError`, closures.
+- Simplifions les Tokens et les Chaînes.
+- Gérons `eval`, `SyntaxError`, les clôtures en amont.
 
 ---
 
-## Instead of this
+## Au lieu de ça
 
 ```js
 function foo(x) {
-  // No `eval`.
+  // Pas d'`eval`.
 }
 ```
 
 ---
 
-## Store this
+## Enregistrons ça
 
 ```yaml
 Names:
@@ -144,15 +145,16 @@ FunctionDeclaration: // 42
 
 ---
 
-## Results
+## Résultat
 
-- Time spent parsing + verifying: -30%.
-- Further optimizations coming :)
+- Parser + analyse statique: durée -30%.
+- C'est pas fini :)
 
 ---
 
-# Fixing download
-Beyond minification
+# Téléchargeons plus vite
+
+Au-delà de la minification
 
 ---
 
@@ -167,80 +169,86 @@ if (Constants.DEBUG) {
 
 ---
 
-- Strings, identifiers, properties are repeated.
-- Many repeats across libraries.
-- Code has patterns!
+- Les chaînes, les noms... se répètent.
+- Des répétitions entre bibliothèques.
+- Le code a des motifs !
 
 ---
 
-## So, let's learn
+## Du coup, apprenons...
 
-- String, identifier, properties dictionary.
-- Code pattern dictionary.
-- => ~1.2 bits/code construction.
-- => ~2-6 bits/string, identifier, properties use.
-
----
-
-## Results
-
-- With a good dictionary, ~minification + brotli.
-- *Without minification.*
-- Further optimizations coming :)
+- Dictionnaires de chaînes, noms...
+- Dictionnaires de code.
+- Un dictionnaire par site web.
+- => ~1.2 bits/nœud.
+- => ~2-6 bits/chaîne, nom...
 
 ---
 
-# Fixing compilation
+## Résultat
+
+- Avec un bon dictionnaire, ~minification + brotli.
+- *Sans minification.*
+- C'est pas fini :)
 
 ---
 
-## Instead of this
+# Compilons plus vite
+
+---
+
+## Au lieu de ça...
 
 ```js
-function later() {
-  // Not used during startup
-}
 function init() {
-  // Used during startup
+  // Exécuté tout de suite
+  // ...
+  button.addEventListener("click",
+    function later() {
+      // Exécuté plus tard
+    });
 }
 ```
 
 ---
 
-## Store this
+## ...enregistrons ça
 
 ```js
-// Initial packet.
+// Paquet #1
 function init() {
-  // Used during startup
+  // ...
+  button.addEventListener("click", $later);
 }
 ```
 
 ```js
-// Another packet.
-function later() {
-  // Not used during startup
+// Paquet #N
+function $later() {
+  // ...
 }
 ```
 
 ---
+
+## ...du coup
 
 :::incremental
 
-- ...only {parse, compile} what you execute.
-- ...{parse, compile, execute} as you receive.
-- So yeah, we're working on *streaming* JavaScript.
+- ...ne {parsons, compilons} que ce dont nous avons besoin.
+- ...{parsons, compilons, exécutons} avant d'avoir reçu tout le fichier.
+- Oui, nous parlons bien de *streaming* de JavaScript.
 
 :::
 
 ---
 
-## Results (lab)
+## Résultats (labo)
 
-- Time spent parsing: -75% (*).
-- Compiling: ~background task (*).
+- Parser: durée -75% (*).
+- Compiler: ~se fait en parallèle (*).
 
-(*) To be confirmed.
+(*) À confirmer.
 
 
 ---
@@ -253,21 +261,30 @@ function later() {
 
 ---
 
-- We can fix JavaScript startup.
-- No coding required.
-- No language harmed.
-- Reduce total work (energy?)
+## Résultats
+
+:::incremental
+
+- Le démarrage du JavaScript est un goulot d'étranglement.
+- Nous pouvons le résoudre !
+- Sans changer le code.
+- Sans changer le langage.
+- Moins de travail pour l'ordinateur !
+
+:::
 
 ---
 
-## Where's the code?
+## Montrez-moi le code !
 
-- Still a WIP.
+- WIP.
 - https://github.com/binast
-- Firefox Nightly (hidden preview)
-- Slides: https://yoric.github.io/Fosdem-2019
-- Contributions welcome!
+- Firefox Nightly (caché derrière une préférence)
+- Slides: https://yoric.github.io/Numendo-2019
+- Bientôt sur un navigateur & et un serveur près de chez vous :)
 
 ---
 
-# Soon on a browser / server near you? :)
+# Contributeurs bienvenus !
+
+- https://github.com/binast
