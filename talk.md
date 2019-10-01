@@ -19,6 +19,7 @@ Un projet
 
 :::incremental
 
+- (sans blague !)
 - [DoubleClick](https://storage.googleapis.com/doubleclick-prod/documents/The_Need_for_Mobile_Speed_-_FINAL.pdf) : sur mobile, si le chargmenet dure **3+ secondes**, 53% des visites sont abandonnées
 - [Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201) : en médiane, le TTI dure **8 secondes** sur fixe, **16 secondes** sur mobile
 :::
